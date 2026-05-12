@@ -229,7 +229,6 @@ layout: null
         .homepage-container{max-width:1200px;margin:0 auto;padding:1.5rem;}
 
         .section-title{font-size:1.1rem;font-weight:700;margin-bottom:1rem;padding-bottom:0.5rem;display:flex;align-items:center;justify-content:space-between;}
-        .section-title a{font-size:0.7rem;font-weight:500;text-decoration:none;color:var(--accent);}
 
         .country-toggle{display:inline-flex;align-items:center;gap:0.4rem;cursor:pointer;font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;padding-bottom:0.5rem;user-select:none;}
         .country-toggle .toggle-arrow{font-size:0.7rem;transition:transform 0.2s;color:var(--accent);}
@@ -237,6 +236,7 @@ layout: null
         .country-links-wrap{display:none;margin-bottom:1.5rem;}
         .country-links-wrap.open{display:block;}
 
+        /* FEATURED */
         .featured-section{margin-bottom:1.5rem;}
         .featured-card{background:#fff;border:1px solid #e5e5e5;border-radius:var(--card-radius);overflow:hidden;transition:all 0.15s ease;box-shadow:var(--card-shadow);}
         .featured-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.08);}
@@ -253,6 +253,7 @@ layout: null
         .featured-card h2 a:hover{color:var(--accent);}
         .featured-excerpt{font-size:0.85rem;color:#555;line-height:1.5;}
 
+        /* LATEST */
         .latest-section{margin-bottom:1.5rem;}
         .latest-grid{display:grid;gap:1rem;}
         .latest-grid.grid-3{grid-template-columns:repeat(3,1fr);}
@@ -273,24 +274,26 @@ layout: null
         .latest-card h3 a:hover{color:var(--accent);}
         .latest-meta{font-size:0.65rem;color:#888;margin-top:auto;}
 
+        /* POPULAR */
         .popular-section{margin-bottom:1.5rem;}
         .popular-list{display:grid;gap:0.75rem;}
         .popular-list.grid-2{grid-template-columns:repeat(2,1fr);}
         .popular-list.list-1{grid-template-columns:1fr;}
         .popular-list.grid-4{grid-template-columns:repeat(4,1fr);}
-        .popular-item{display:flex;align-items:flex-start;gap:0.75rem;background:#fff;border:1px solid #e5e5e5;border-radius:var(--card-radius);padding:0.75rem;transition:all 0.15s ease;box-shadow:var(--card-shadow);word-wrap:break-word;overflow-wrap:break-word;}
+        .popular-item{display:flex;align-items:flex-start;gap:0.75rem;background:#fff;border:1px solid #e5e5e5;border-radius:var(--card-radius);padding:0.75rem;transition:all 0.15s ease;box-shadow:var(--card-shadow);word-wrap:break-word;overflow-wrap:break-word;max-width:100%;}
         .popular-item:hover{box-shadow:0 4px 12px rgba(0,0,0,0.08);}
         .popular-item.pop-accent-border{border-left:3px solid var(--accent);}
         .popular-item.pop-bg-tint{background:var(--accent-light);border-color:transparent;}
         .popular-item.pop-shadow-color{box-shadow:0 2px 8px var(--accent)20;}
         .popular-img{width:70px;aspect-ratio:16/9;flex-shrink:0;border-radius:4px;overflow:hidden;}
         .popular-img img{width:100%;height:100%;object-fit:cover;}
-        .popular-content{flex:1;min-width:0;}
-        .popular-content h3{font-size:0.85rem;margin-bottom:0.25rem;word-break:break-word;}
+        .popular-content{flex:1;min-width:0;max-width:100%;}
+        .popular-content h3{font-size:0.85rem;margin-bottom:0.25rem;word-break:break-word;overflow-wrap:break-word;}
         .popular-content h3 a{color:#111;text-decoration:none;}
         .popular-content h3 a:hover{color:var(--accent);}
-        .popular-content p{font-size:0.7rem;color:#888;word-break:break-word;}
+        .popular-content p{font-size:0.7rem;color:#888;word-break:break-word;overflow-wrap:break-word;}
 
+        /* COUNTRY */
         .country-links{display:grid;gap:0.4rem;}
         .country-links.grid-6{grid-template-columns:repeat(6,1fr);}
         .country-links.grid-4{grid-template-columns:repeat(4,1fr);}
@@ -321,7 +324,7 @@ layout: null
             .homepage-container{padding:1rem;}.header-spacer{height:52px;}
         }
         @media(max-width:480px){
-            .popular-item{flex-direction:column;align-items:flex-start;gap:0.5rem;}.popular-img{width:100%;aspect-ratio:16/9;}
+            .popular-item{flex-direction:column;align-items:flex-start;gap:0.5rem;}.popular-img{width:100%;aspect-ratio:16/9;}.popular-content{max-width:100%;}
             .country-links.grid-6{grid-template-columns:repeat(2,1fr);}.country-links.masonry{columns:1;}
             .header-spacer{height:48px;}
         }
@@ -385,7 +388,7 @@ layout: null
                     {% endif %}
                     <div class="popular-content">
                         <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
-                        <p>{{ post.description }}</p>
+                        <p>{{ post.description | truncate: 80 }}</p>
                         {% assign before_svg = post.content | split: '<p>' | first %}
                         <div class="excerpt spo">{{ before_svg }}</div>
                     </div>
@@ -394,172 +397,17 @@ layout: null
             </div>
         </div>
         {% endif %}
-<br />
+
         <!-- EXPLORE BY COUNTRY -->
-<div class="country-toggle" id="countryToggle" onclick="this.classList.toggle('open'); document.getElementById('countryWrap').classList.toggle('open');">
-    <span class="toggle-arrow">&#9654;</span>
-    <span class="section-title-country-text">Explore by Country</span>
-</div>
-<div class="country-links-wrap" id="countryWrap">
-    <div class="country-links">
-        <a href="/country01/">Republic of Albania</a>
-        <a href="/country02/">Principality of Andorra</a>
-        <a href="/country03/">Antigua and Barbuda</a>
-        <a href="/country04/">Argentine Republic</a>
-        <a href="/country05/">Commonwealth of Australia</a>
-        <a href="/country06/">Republic of Austria</a>
-        <a href="/country07/">Commonwealth of The Bahamas</a>
-        <a href="/country08/">Kingdom of Bahrain</a>
-        <a href="/country09/">Barbados</a>
-        <a href="/country10/">Kingdom of Belgium</a>
-        <a href="/country11/">Belize</a>
-        <a href="/country12/">Kingdom of Bhutan</a>
-        <a href="/country13/">Bosnia and Herzegovina</a>
-        <a href="/country14/">Republic of Botswana</a>
-        <a href="/country15/">Brunei Darussalam</a>
-        <a href="/country16/">Republic of Bulgaria</a>
-        <a href="/country17/">Canada</a>
-        <a href="/country18/">Republic of Cabo Verde</a>
-        <a href="/country19/">Republic of Chile</a>
-        <a href="/country20/">Republic of Costa Rica</a>
-        <a href="/country21/">Republic of Croatia</a>
-        <a href="/country22/">Republic of Cyprus</a>
-        <a href="/country23/">Czech Republic</a>
-        <a href="/country24/">Kingdom of Denmark</a>
-        <a href="/country25/">Commonwealth of Dominica</a>
-        <a href="/country26/">Republic of Estonia</a>
-        <a href="/country27/">Republic of Fiji</a>
-        <a href="/country28/">Republic of Finland</a>
-        <a href="/country29/">French Republic</a>
-        <a href="/country30/">Federal Republic of Germany</a>
-        <a href="/country31/">Republic of Ghana</a>
-        <a href="/country32/">Hellenic Republic</a>
-        <a href="/country33/">Grenada</a>
-        <a href="/country34/">Hungary</a>
-        <a href="/country35/">Republic of Iceland</a>
-        <a href="/country36/">Republic of Indonesia</a>
-        <a href="/country37/">Ireland</a>
-        <a href="/country38/">Italian Republic</a>
-        <a href="/country39/">Japan</a>
-        <a href="/country40/">Hashemite Kingdom of Jordan</a>
-        <a href="/country41/">Republic of Kazakhstan</a>
-        <a href="/country42/">Republic of Korea</a>
-        <a href="/country43/">Republic of Kosovo</a>
-        <a href="/country44/">State of Kuwait</a>
-        <a href="/country45/">Republic of Latvia</a>
-        <a href="/country46/">Principality of Liechtenstein</a>
-        <a href="/country47/">Republic of Lithuania</a>
-        <a href="/country48/">Grand Duchy of Luxembourg</a>
-        <a href="/country49/">Malaysia</a>
-        <a href="/country50/">Republic of Maldives</a>
-        <a href="/country51/">Republic of Malta</a>
-        <a href="/country52/">Republic of the Marshall Islands</a>
-        <a href="/country53/">Republic of Mauritius</a>
-        <a href="/country54/">Federated States of Micronesia</a>
-        <a href="/country55/">Principality of Monaco</a>
-        <a href="/country56/">Mongolia</a>
-        <a href="/country57/">Montenegro</a>
-        <a href="/country58/">Kingdom of Morocco</a>
-        <a href="/country59/">Republic of Namibia</a>
-        <a href="/country60/">New Zealand</a>
-        <a href="/country61/">Republic of North Macedonia</a>
-        <a href="/country62/">Kingdom of Norway</a>
-        <a href="/country63/">Sultanate of Oman</a>
-        <a href="/country64/">Republic of Palau</a>
-        <a href="/country65/">Republic of Panama</a>
-        <a href="/country66/">Republic of Paraguay</a>
-        <a href="/country67/">Republic of Poland</a>
-        <a href="/country68/">Portuguese Republic</a>
-        <a href="/country69/">State of Qatar</a>
-        <a href="/country70/">Romania</a>
-        <a href="/country71/">Republic of Rwanda</a>
-        <a href="/country72/">Federation of Saint Christopher and Nevis</a>
-        <a href="/country73/">Saint Lucia</a>
-        <a href="/country74/">Saint Vincent and the Grenadines</a>
-        <a href="/country75/">Independent State of Samoa</a>
-        <a href="/country76/">Republic of San Marino</a>
-        <a href="/country77/">Democratic Republic of Sao Tome and Principe</a>
-        <a href="/country78/">Republic of Senegal</a>
-        <a href="/country79/">Republic of Serbia</a>
-        <a href="/country80/">Republic of Seychelles</a>
-        <a href="/country81/">Republic of Singapore</a>
-        <a href="/country82/">Slovak Republic</a>
-        <a href="/country83/">Republic of Slovenia</a>
-        <a href="/country84/">Kingdom of Spain</a>
-        <a href="/country85/">Kingdom of Sweden</a>
-        <a href="/country86/">Swiss Confederation</a>
-        <a href="/country87/">Republic of China (Taiwan)</a>
-        <a href="/country88/">Kingdom of Thailand</a>
-        <a href="/country89/">Kingdom of Tonga</a>
-        <a href="/country90/">Republic of Tunisia</a>
-        <a href="/country91/">Tuvalu</a>
-        <a href="/country92/">United Arab Emirates</a>
-        <a href="/country93/">United Kingdom of Great Britain and Northern Ireland</a>
-        <a href="/country94/">Oriental Republic of Uruguay</a>
-        <a href="/country95/">Republic of Uzbekistan</a>
-        <a href="/country96/">Republic of Vanuatu</a>
-        <a href="/country97/">Vatican City State</a>
-        <a href="/country98/">Socialist Republic of Vietnam</a>
-        <a href="/country99/">People's Democratic Republic of Algeria</a>
-        <a href="/country100/">Republic of Angola</a>
-        <a href="/country101/">Kingdom of Saudi Arabia</a>
-        <a href="/country102/">People's Republic of Bangladesh</a>
-        <a href="/country103/">Republic of Benin</a>
-        <a href="/country104/">Plurinational State of Bolivia</a>
-        <a href="/country105/">Federative Republic of Brazil</a>
-        <a href="/country106/">Kingdom of Cambodia</a>
-        <a href="/country107/">People's Republic of China</a>
-        <a href="/country108/">Republic of Colombia</a>
-        <a href="/country109/">Union of the Comoros</a>
-        <a href="/country110/">Republic of Cuba</a>
-        <a href="/country111/">Dominican Republic</a>
-        <a href="/country112/">Republic of Ecuador</a>
-        <a href="/country113/">Arab Republic of Egypt</a>
-        <a href="/country114/">Republic of El Salvador</a>
-        <a href="/country115/">Kingdom of Eswatini</a>
-        <a href="/country116/">Gabonese Republic</a>
-        <a href="/country117/">Republic of The Gambia</a>
-        <a href="/country118/">Republic of Guatemala</a>
-        <a href="/country119/">Republic of Guinea</a>
-        <a href="/country120/">Republic of Guinea-Bissau</a>
-        <a href="/country121/">Co-operative Republic of Guyana</a>
-        <a href="/country122/">Republic of Honduras</a>
-        <a href="/country123/">Republic of India</a>
-        <a href="/country124/">Republic of Côte d'Ivoire</a>
-        <a href="/country125/">Jamaica</a>
-        <a href="/country126/">Republic of Kenya</a>
-        <a href="/country127/">Independent and Sovereign Republic of Kiribati</a>
-        <a href="/country128/">Lao People's Democratic Republic</a>
-        <a href="/country129/">Kingdom of Lesotho</a>
-        <a href="/country130/">Republic of Liberia</a>
-        <a href="/country131/">Republic of Madagascar</a>
-        <a href="/country132/">Republic of Malawi</a>
-        <a href="/country133/">Islamic Republic of Mauritania</a>
-        <a href="/country134/">United Mexican States</a>
-        <a href="/country135/">Republic of Mozambique</a>
-        <a href="/country136/">Republic of Nauru</a>
-        <a href="/country137/">Federal Democratic Republic of Nepal</a>
-        <a href="/country138/">Republic of Nicaragua</a>
-        <a href="/country139/">Independent State of Papua New Guinea</a>
-        <a href="/country140/">Republic of Peru</a>
-        <a href="/country141/">Republic of the Philippines</a>
-        <a href="/country142/">Republic of Sierra Leone</a>
-        <a href="/country143/">Solomon Islands</a>
-        <a href="/country144/">Republic of South Africa</a>
-        <a href="/country145/">Democratic Socialist Republic of Sri Lanka</a>
-        <a href="/country146/">Republic of Suriname</a>
-        <a href="/country147/">United Republic of Tanzania</a>
-        <a href="/country148/">Democratic Republic of Timor-Leste</a>
-        <a href="/country149/">Togolese Republic</a>
-        <a href="/country150/">Republic of Trinidad and Tobago</a>
-        <a href="/country151/">Republic of Türkiye</a>
-        <a href="/country152/">Turkmenistan</a>
-        <a href="/country153/">Republic of Uganda</a>
-        <a href="/country154/">United States of America</a>
-        <a href="/country155/">Republic of Zambia</a>
-        <a href="/country156/">Republic of Zimbabwe</a>
-    </div>
-</div>
+        <div class="country-toggle" id="countryToggle" onclick="this.classList.toggle('open'); document.getElementById('countryWrap').classList.toggle('open');">
+            <span class="toggle-arrow">&#9654;</span>
+            <span class="section-title-country-text">Explore by Country</span>
+        </div>
+        <div class="country-links-wrap" id="countryWrap">
+            <div class="country-links">
+                <a href="/country01/">Republic of Albania</a><a href="/country02/">Principality of Andorra</a><a href="/country03/">Antigua and Barbuda</a><a href="/country04/">Argentine Republic</a><a href="/country05/">Commonwealth of Australia</a><a href="/country06/">Republic of Austria</a><a href="/country07/">Commonwealth of The Bahamas</a><a href="/country08/">Kingdom of Bahrain</a><a href="/country09/">Barbados</a><a href="/country10/">Kingdom of Belgium</a><a href="/country11/">Belize</a><a href="/country12/">Kingdom of Bhutan</a><a href="/country13/">Bosnia and Herzegovina</a><a href="/country14/">Republic of Botswana</a><a href="/country15/">Brunei Darussalam</a><a href="/country16/">Republic of Bulgaria</a><a href="/country17/">Canada</a><a href="/country18/">Republic of Cabo Verde</a><a href="/country19/">Republic of Chile</a><a href="/country20/">Republic of Costa Rica</a><a href="/country21/">Republic of Croatia</a><a href="/country22/">Republic of Cyprus</a><a href="/country23/">Czech Republic</a><a href="/country24/">Kingdom of Denmark</a><a href="/country25/">Commonwealth of Dominica</a><a href="/country26/">Republic of Estonia</a><a href="/country27/">Republic of Fiji</a><a href="/country28/">Republic of Finland</a><a href="/country29/">French Republic</a><a href="/country30/">Federal Republic of Germany</a><a href="/country31/">Republic of Ghana</a><a href="/country32/">Hellenic Republic</a><a href="/country33/">Grenada</a><a href="/country34/">Hungary</a><a href="/country35/">Republic of Iceland</a><a href="/country36/">Republic of Indonesia</a><a href="/country37/">Ireland</a><a href="/country38/">Italian Republic</a><a href="/country39/">Japan</a><a href="/country40/">Hashemite Kingdom of Jordan</a><a href="/country41/">Republic of Kazakhstan</a><a href="/country42/">Republic of Korea</a><a href="/country43/">Republic of Kosovo</a><a href="/country44/">State of Kuwait</a><a href="/country45/">Republic of Latvia</a><a href="/country46/">Principality of Liechtenstein</a><a href="/country47/">Republic of Lithuania</a><a href="/country48/">Grand Duchy of Luxembourg</a><a href="/country49/">Malaysia</a><a href="/country50/">Republic of Maldives</a><a href="/country51/">Republic of Malta</a><a href="/country52/">Republic of the Marshall Islands</a><a href="/country53/">Republic of Mauritius</a><a href="/country54/">Federated States of Micronesia</a><a href="/country55/">Principality of Monaco</a><a href="/country56/">Mongolia</a><a href="/country57/">Montenegro</a><a href="/country58/">Kingdom of Morocco</a><a href="/country59/">Republic of Namibia</a><a href="/country60/">New Zealand</a><a href="/country61/">Republic of North Macedonia</a><a href="/country62/">Kingdom of Norway</a><a href="/country63/">Sultanate of Oman</a><a href="/country64/">Republic of Palau</a><a href="/country65/">Republic of Panama</a><a href="/country66/">Republic of Paraguay</a><a href="/country67/">Republic of Poland</a><a href="/country68/">Portuguese Republic</a><a href="/country69/">State of Qatar</a><a href="/country70/">Romania</a><a href="/country71/">Republic of Rwanda</a><a href="/country72/">Federation of Saint Christopher and Nevis</a><a href="/country73/">Saint Lucia</a><a href="/country74/">Saint Vincent and the Grenadines</a><a href="/country75/">Independent State of Samoa</a><a href="/country76/">Republic of San Marino</a><a href="/country77/">Democratic Republic of Sao Tome and Principe</a><a href="/country78/">Republic of Senegal</a><a href="/country79/">Republic of Serbia</a><a href="/country80/">Republic of Seychelles</a><a href="/country81/">Republic of Singapore</a><a href="/country82/">Slovak Republic</a><a href="/country83/">Republic of Slovenia</a><a href="/country84/">Kingdom of Spain</a><a href="/country85/">Kingdom of Sweden</a><a href="/country86/">Swiss Confederation</a><a href="/country87/">Republic of China (Taiwan)</a><a href="/country88/">Kingdom of Thailand</a><a href="/country89/">Kingdom of Tonga</a><a href="/country90/">Republic of Tunisia</a><a href="/country91/">Tuvalu</a><a href="/country92/">United Arab Emirates</a><a href="/country93/">United Kingdom of Great Britain and Northern Ireland</a><a href="/country94/">Oriental Republic of Uruguay</a><a href="/country95/">Republic of Uzbekistan</a><a href="/country96/">Republic of Vanuatu</a><a href="/country97/">Vatican City State</a><a href="/country98/">Socialist Republic of Vietnam</a><a href="/country99/">People's Democratic Republic of Algeria</a><a href="/country100/">Republic of Angola</a><a href="/country101/">Kingdom of Saudi Arabia</a><a href="/country102/">People's Republic of Bangladesh</a><a href="/country103/">Republic of Benin</a><a href="/country104/">Plurinational State of Bolivia</a><a href="/country105/">Federative Republic of Brazil</a><a href="/country106/">Kingdom of Cambodia</a><a href="/country107/">People's Republic of China</a><a href="/country108/">Republic of Colombia</a><a href="/country109/">Union of the Comoros</a><a href="/country110/">Republic of Cuba</a><a href="/country111/">Dominican Republic</a><a href="/country112/">Republic of Ecuador</a><a href="/country113/">Arab Republic of Egypt</a><a href="/country114/">Republic of El Salvador</a><a href="/country115/">Kingdom of Eswatini</a><a href="/country116/">Gabonese Republic</a><a href="/country117/">Republic of The Gambia</a><a href="/country118/">Republic of Guatemala</a><a href="/country119/">Republic of Guinea</a><a href="/country120/">Republic of Guinea-Bissau</a><a href="/country121/">Co-operative Republic of Guyana</a><a href="/country122/">Republic of Honduras</a><a href="/country123/">Republic of India</a><a href="/country124/">Republic of Côte d'Ivoire</a><a href="/country125/">Jamaica</a><a href="/country126/">Republic of Kenya</a><a href="/country127/">Independent and Sovereign Republic of Kiribati</a><a href="/country128/">Lao People's Democratic Republic</a><a href="/country129/">Kingdom of Lesotho</a><a href="/country130/">Republic of Liberia</a><a href="/country131/">Republic of Madagascar</a><a href="/country132/">Republic of Malawi</a><a href="/country133/">Islamic Republic of Mauritania</a><a href="/country134/">United Mexican States</a><a href="/country135/">Republic of Mozambique</a><a href="/country136/">Republic of Nauru</a><a href="/country137/">Federal Democratic Republic of Nepal</a><a href="/country138/">Republic of Nicaragua</a><a href="/country139/">Independent State of Papua New Guinea</a><a href="/country140/">Republic of Peru</a><a href="/country141/">Republic of the Philippines</a><a href="/country142/">Republic of Sierra Leone</a><a href="/country143/">Solomon Islands</a><a href="/country144/">Republic of South Africa</a><a href="/country145/">Democratic Socialist Republic of Sri Lanka</a><a href="/country146/">Republic of Suriname</a><a href="/country147/">United Republic of Tanzania</a><a href="/country148/">Democratic Republic of Timor-Leste</a><a href="/country149/">Togolese Republic</a><a href="/country150/">Republic of Trinidad and Tobago</a><a href="/country151/">Republic of Türkiye</a><a href="/country152/">Turkmenistan</a><a href="/country153/">Republic of Uganda</a><a href="/country154/">United States of America</a><a href="/country155/">Republic of Zambia</a><a href="/country156/">Republic of Zimbabwe</a>
+            </div>
+        </div>
 
     </div>
 
