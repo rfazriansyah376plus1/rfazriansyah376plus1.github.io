@@ -363,7 +363,7 @@ layout: null
         </div>
         {% endif %}
 
-<!-- Homepage Featured + Grid (Desktop + Mobile Tetap Featured + Grid) -->
+<!-- Homepage Featured + Grid (Desktop Rapi + Mobile 2 Kolom) -->
 
 <div id="homeFeaturedWrap">
 
@@ -444,10 +444,7 @@ layout: null
     margin-top: 40px;
 }
 
-/* =========================
-   FEATURED POST
-========================= */
-
+/* Featured */
 .home-featured-main {
     background: #fff;
     border-radius: 20px;
@@ -490,10 +487,7 @@ layout: null
     margin: 0;
 }
 
-/* =========================
-   GRID POSTS
-========================= */
-
+/* Grid */
 .home-featured-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -546,10 +540,7 @@ layout: null
     margin: 0;
 }
 
-/* =========================
-   TABLET
-========================= */
-
+/* Tablet */
 @media (max-width: 992px) {
     .home-featured-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -560,10 +551,7 @@ layout: null
     }
 }
 
-/* =========================
-   MOBILE
-========================= */
-
+/* Mobile tetap 2 kolom */
 @media (max-width: 768px) {
     #homeFeaturedWrap {
         margin-top: 20px;
@@ -589,7 +577,6 @@ layout: null
         line-height: 1.7;
     }
 
-    /* tetap grid, bukan horizontal */
     .home-featured-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 14px;
@@ -600,33 +587,18 @@ layout: null
     }
 
     .home-grid-content {
-        padding: 14px;
+        padding: 12px;
     }
 
     .home-grid-title {
-        font-size: 15px;
+        font-size: 14px;
         line-height: 1.4;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
     }
 
     .home-grid-desc {
         font-size: 12px;
-        line-height: 1.6;
-    }
-}
-
-/* Extra Small Mobile */
-@media (max-width: 480px) {
-    .home-featured-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .home-grid-title {
-        font-size: 16px;
-    }
-
-    .home-grid-desc {
-        font-size: 13px;
+        line-height: 1.5;
     }
 }
 </style>
