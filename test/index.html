@@ -432,6 +432,8 @@ layout: null
                     {{ post.description }}
                 </p>
                 {% endif %}
+                {% assign before_svg = post.content | split: '<p>' | first %}
+                        <div class="excerpt spo">{{ before_svg }}</div>
             </div>
 
         </div>
@@ -647,6 +649,8 @@ Desktop + Mobile tetap sama -->
                     {{ hf_main_post.description }}
                 </p>
                 {% endif %}
+                {% assign before_svg = post.content | split: '<p>' | first %}
+                        <div class="excerpt spo">{{ before_svg }}</div>
             </div>
 
         </div>
@@ -675,6 +679,8 @@ Desktop + Mobile tetap sama -->
                             {{ post.title }}
                         </a>
                     </h4>
+                    {% assign before_svg = post.content | split: '<p>' | first %}
+                        <div class="excerpt spo">{{ before_svg }}</div>
                 </div>
 
             </div>
