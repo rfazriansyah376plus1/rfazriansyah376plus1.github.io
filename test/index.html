@@ -115,194 +115,222 @@ layout: null
             r = Math.round((r + m) * 255); g = Math.round((g + m) * 255); b = Math.round((b + m) * 255);
             return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
         }
-        var accentColor = hslToHex(hue, 60, 45);
-        var accentLight = hslToHex(hue, 40, 90);
-        var avatarBg = hslToHex(hue, 60, 50);
-        var words = fullName.split("-"), initials = "";
-        for (var w = 0; w < Math.min(words.length, 3); w++) { if (words[w].length > 0) initials += words[w].charAt(0).toUpperCase(); }
-        if (initials.length < 2) initials = fullName.substring(0, 3).toUpperCase();
-        var avatarSize = 40;
-        var avatarHTML = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" + avatarSize + "\" height=\"" + avatarSize + "\" viewBox=\"0 0 " + avatarSize + " " + avatarSize + "\"><rect width=\"" + avatarSize + "\" height=\"" + avatarSize + "\" rx=\"" + (avatarSize/2) + "\" fill=\"" + avatarBg + "\"/><text x=\"" + (avatarSize/2) + "\" y=\"" + (avatarSize/2 + 6) + "\" text-anchor=\"middle\" fill=\"#ffffff\" font-size=\"" + (avatarSize/2.2) + "\" font-weight=\"bold\" font-family=\"-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif\">" + initials + "</text></svg>";
-        document.getElementById("domainAvatar").innerHTML = avatarHTML;
 
-        // Warna section dari hue domain
-        var sc = {
-            welcome:    hslToHex(hue, 25, 96),
-            latest:     hslToHex((hue + 30) % 360, 15, 97),
-            popular:    hslToHex((hue + 60) % 360, 20, 96),
-            mustreadF:  hslToHex((hue + 90) % 360, 15, 98),
-            mustreadG:  hslToHex((hue + 120) % 360, 10, 97),
-            country:    hslToHex((hue + 150) % 360, 15, 96),
-            footerSec:  hslToHex((hue + 180) % 360, 20, 30),
-            accent:     accentColor,
-            accentLight: accentLight
+        // Auto-detect text color (hitam atau putih)
+        function textColorFor(bgHex) {
+            var r = parseInt(bgHex.slice(1,3), 16);
+            var g = parseInt(bgHex.slice(3,5), 16);
+            var b = parseInt(bgHex.slice(5,7), 16);
+            var lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+            return lum > 0.55 ? "#111111" : "#ffffff";
+        }
+
+        // Generate 12 warna dari hue
+        function genColor(offset, sat, light) {
+            return hslToHex((hue + offset) % 360, sat, light);
+        }
+
+        var colors = {
+            c0:  genColor(0, 70, 50),
+            c1:  genColor(0, 40, 88),
+            c2:  genColor(30, 60, 55),
+            c3:  genColor(60, 55, 60),
+            c4:  genColor(90, 50, 65),
+            c5:  genColor(120, 45, 70),
+            c6:  genColor(150, 50, 60),
+            c7:  genColor(180, 55, 55),
+            c8:  genColor(210, 60, 50),
+            c9:  genColor(240, 50, 65),
+            c10: genColor(270, 55, 60),
+            c11: genColor(300, 50, 55),
+            bg:  genColor(0, 10, 96),
+            dark: genColor(180, 20, 22),
+            white: "#ffffff",
+            lightGray: "#f5f5f5"
         };
 
-        // Terapkan warna section
-        var welcomeEl = document.getElementById("welcomePara");
-        var latestEl = document.querySelector(".latest-section");
-        var popularEl = document.querySelector(".popular-section");
-        var mustreadF = document.querySelector(".home-featured-main");
-        var mustreadG = document.querySelectorAll(".home-grid-card");
-        var countryEl = document.querySelector(".country-toggle").parentElement;
-        var footerEl = document.getElementById("footerPara");
-
-        if (welcomeEl) { welcomeEl.style.background = sc.welcome; welcomeEl.style.padding = "16px"; welcomeEl.style.borderRadius = "8px"; welcomeEl.style.marginBottom = "1rem"; }
-        if (latestEl) { latestEl.style.background = sc.latest; latestEl.style.padding = "1rem"; latestEl.style.borderRadius = "8px"; }
-        if (popularEl) { popularEl.style.background = sc.popular; popularEl.style.padding = "1rem"; popularEl.style.borderRadius = "8px"; }
-        if (mustreadF) { mustreadF.style.background = sc.mustreadF; }
-        mustreadG.forEach(function(card) { card.style.background = sc.mustreadG; });
-        if (countryEl) { countryEl.style.background = sc.country; countryEl.style.padding = "1rem"; countryEl.style.borderRadius = "8px"; }
-        if (footerEl) { footerEl.style.background = sc.footerSec; footerEl.style.color = "#eee"; footerEl.style.padding = "16px"; footerEl.style.borderRadius = "8px"; footerEl.style.marginTop = "1rem"; }
-
-        // Variasi header
-        var headerBgOptions = ["#ffffff","#fafafa","#f8f6f2","#f5f5f5","#fffef9","#f0f0f0"];
-        var textColorOptions = ["#000000","#1a1a1a","#0d1b2a","#111111","#1c1c1c","#222222"];
-        var shadowOptions = ["0 2px 10px rgba(0,0,0,0.08)","0 1px 6px rgba(0,0,0,0.06)","0 3px 14px rgba(0,0,0,0.10)","0 2px 8px rgba(0,0,0,0.04)","0 4px 16px rgba(0,0,0,0.12)","0 1px 3px rgba(0,0,0,0.08)"];
-        var header = document.getElementById("blogHeader");
-        var titleEl = document.getElementById("blogMainTitle");
-        var menuBtn = document.getElementById("blogMenuToggle");
-        var menuIcons = document.querySelectorAll(".menu-icon-main");
-        if (header) { header.style.background = headerBgOptions[domainHash % 6]; header.style.boxShadow = shadowOptions[domainHash % 6]; }
-        if (titleEl) titleEl.style.color = textColorOptions[domainHash % 6];
-        if (menuBtn) menuBtn.style.color = textColorOptions[domainHash % 6];
-        menuIcons.forEach(function(icon) { icon.style.stroke = textColorOptions[domainHash % 6]; });
-
-        var panelRadiusOptions = ["8px","10px","12px","6px","14px","4px"];
-        var panelShadowOptions = ["0 4px 20px rgba(0,0,0,0.12)","0 2px 12px rgba(0,0,0,0.10)","0 6px 24px rgba(0,0,0,0.14)","0 3px 16px rgba(0,0,0,0.08)","0 5px 22px rgba(0,0,0,0.13)","0 4px 18px rgba(0,0,0,0.11)"];
-        var menuPanel = document.getElementById("blogMenuPanel");
-        if (menuPanel) { menuPanel.style.borderRadius = panelRadiusOptions[domainHash % 6]; menuPanel.style.boxShadow = panelShadowOptions[domainHash % 6]; }
-
-        var styleId = "domain-variations";
-        var existingStyle = document.getElementById(styleId);
-        if (existingStyle) existingStyle.remove();
-        
-        var cardRadiusOptions = ["4px","6px","8px","10px","12px","16px"];
-        var cardShadowOptions = ["none","0 1px 3px rgba(0,0,0,0.06)","0 2px 8px rgba(0,0,0,0.08)","0 4px 12px rgba(0,0,0,0.10)"];
-        var sectionTitleStyles = [
-            "border-bottom:2px solid " + accentColor + ";",
-            "background:" + accentLight + ";padding:6px 14px;border-radius:20px;display:inline-block;",
-            "border-left:4px solid " + accentColor + ";padding-left:10px;"
-        ];
-        
+        // Terapkan CSS variables
         var styleCSS = ":root {";
-        styleCSS += "--accent:" + accentColor + ";";
-        styleCSS += "--accent-light:" + accentLight + ";";
-        styleCSS += "--card-radius:" + cardRadiusOptions[domainHash % 6] + ";";
-        styleCSS += "--card-shadow:" + cardShadowOptions[domainHash % 4] + ";";
+        for (var key in colors) {
+            styleCSS += "--" + key + ":" + colors[key] + ";";
+        }
+        styleCSS += "--card-radius:8px;--card-shadow:0 2px 8px rgba(0,0,0,0.06);";
         styleCSS += "}";
-        styleCSS += ".section-title { " + sectionTitleStyles[domainHash % 3] + " }";
         
         var styleEl = document.createElement("style");
-        styleEl.id = styleId;
+        styleEl.id = "domain-colors";
         styleEl.textContent = styleCSS;
         document.head.appendChild(styleEl);
 
-        // Variasi font
-        var fonts = [
-            "'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif",
-            "'Inter', -apple-system, BlinkMacSystemFont, Roboto, sans-serif",
-            "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-            "'Noto Sans', -apple-system, BlinkMacSystemFont, Roboto, sans-serif"
-        ];
-        document.body.style.fontFamily = fonts[domainHash % fonts.length];
+        // Avatar
+        var avatarBg = genColor(0, 60, 50);
+        var words = fullName.split("-"), initials = "";
+        for (var w = 0; w < Math.min(words.length, 3); w++) { if (words[w].length > 0) initials += words[w].charAt(0).toUpperCase(); }
+        if (initials.length < 2) initials = fullName.substring(0, 3).toUpperCase();
+        var avatarHTML = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"40\" height=\"40\" viewBox=\"0 0 40 40\"><rect width=\"40\" height=\"40\" rx=\"20\" fill=\"" + avatarBg + "\"/><text x=\"20\" y=\"26\" text-anchor=\"middle\" fill=\"#fff\" font-size=\"18\" font-weight=\"bold\" font-family=\"-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif\">" + initials + "</text></svg>";
+        document.getElementById("domainAvatar").innerHTML = avatarHTML;
 
-        // Variasi background pattern
-        var patterns = [
-            "none",
-            "radial-gradient(circle, #f0f0f0 1px, transparent 1px)",
-            "none",
-            "linear-gradient(135deg, #fafafa 25%, transparent 25%)",
-            "none",
-            "repeating-linear-gradient(0deg, transparent, transparent 20px, #f9f9f9 20px, #f9f9f9 21px)"
-        ];
-        var bgPattern = patterns[domainHash % patterns.length];
-        if (bgPattern !== "none") {
-            document.body.style.backgroundImage = bgPattern;
-            document.body.style.backgroundSize = bgPattern.includes("circle") ? "20px 20px" : "40px 40px";
+        // Header
+        var header = document.getElementById("blogHeader");
+        var headerBg = genColor(0, 50, 95);
+        if (header) { header.style.background = headerBg; header.style.boxShadow = "0 2px 12px " + genColor(0, 40, 70) + "30"; }
+        var headerText = textColorFor(headerBg);
+        var titleEl = document.getElementById("blogMainTitle");
+        if (titleEl) titleEl.style.color = headerText;
+        var menuBtn = document.getElementById("blogMenuToggle");
+        if (menuBtn) menuBtn.style.color = headerText;
+        document.querySelectorAll(".menu-icon-main").forEach(function(icon) { icon.style.stroke = headerText; });
+
+        // Font
+        var fonts = ["'Segoe UI', sans-serif", "'Inter', sans-serif", "-apple-system, sans-serif", "'Noto Sans', sans-serif"];
+        document.body.style.fontFamily = fonts[domainHash % 4];
+
+        // Body background
+        document.body.style.background = genColor(0, 8, 97);
+
+        // Helper: apply section bg + auto text
+        function applySection(el, bgKey, pad) {
+            if (!el) return;
+            var bg = colors[bgKey];
+            var txt = textColorFor(bg);
+            el.style.background = bg;
+            el.style.color = txt;
+            if (pad) {
+                el.style.padding = "20px";
+                el.style.borderRadius = "12px";
+                el.style.marginBottom = "1rem";
+            }
+            // Update semua link dan teks kecil
+            el.querySelectorAll("a").forEach(function(a) { a.style.color = txt; });
+            el.querySelectorAll("p, .excerpt, .latest-meta, .home-featured-desc, .home-grid-desc").forEach(function(e) {
+                e.style.color = txt === "#ffffff" ? "rgba(255,255,255,0.8)" : "rgba(0,0,0,0.65)";
+            });
         }
 
-        // Variasi urutan section
+        // Apply ke semua section
+        applySection(document.getElementById("welcomePara"), "c2", true);
+        applySection(document.querySelector(".latest-section"), "c3", true);
+        applySection(document.querySelector(".popular-section"), "c4", true);
+        applySection(document.querySelector(".home-featured-main"), "c5", false);
+        applySection(document.getElementById("footerPara"), "dark", true);
+
+        // Grid cards
+        document.querySelectorAll(".home-grid-card").forEach(function(card) {
+            var bg = genColor(120, 25, 94);
+            var txt = textColorFor(bg);
+            card.style.background = bg;
+            card.style.border = "1px solid " + genColor(120, 40, 80);
+            card.style.color = txt;
+            card.querySelectorAll("a").forEach(function(a) { a.style.color = txt; });
+            card.querySelectorAll("p, .home-grid-desc").forEach(function(e) { e.style.color = txt === "#ffffff" ? "rgba(255,255,255,0.8)" : "rgba(0,0,0,0.65)"; });
+        });
+
+        // Latest cards
+        document.querySelectorAll(".latest-card").forEach(function(card, idx) {
+            var cardColors = ["c6", "c7", "c8", "c9", "c10", "c11"];
+            var bg = colors[cardColors[idx % cardColors.length]];
+            var txt = textColorFor(bg);
+            card.style.background = bg;
+            card.style.border = "none";
+            card.style.color = txt;
+            card.querySelectorAll("a").forEach(function(a) { a.style.color = txt; });
+            card.querySelectorAll(".latest-meta, .excerpt").forEach(function(e) { e.style.color = txt === "#ffffff" ? "rgba(255,255,255,0.75)" : "rgba(0,0,0,0.6)"; });
+        });
+
+        // Popular items
+        document.querySelectorAll(".popular-item").forEach(function(item, idx) {
+            var popColors = ["c8", "c9", "c10", "c11", "c6", "c7"];
+            var bg = colors[popColors[idx % popColors.length]];
+            var txt = textColorFor(bg);
+            item.style.background = bg;
+            item.style.border = "none";
+            item.style.color = txt;
+            item.querySelectorAll("a").forEach(function(a) { a.style.color = txt; });
+            item.querySelectorAll("p, .excerpt").forEach(function(e) { e.style.color = txt === "#ffffff" ? "rgba(255,255,255,0.75)" : "rgba(0,0,0,0.6)"; });
+        });
+
+        // Country section
+        var countryParent = document.querySelector(".country-toggle").parentElement;
+        if (countryParent) {
+            var countryBg = genColor(210, 20, 94);
+            var countryTxt = textColorFor(countryBg);
+            countryParent.style.background = countryBg;
+            countryParent.style.padding = "20px";
+            countryParent.style.borderRadius = "12px";
+            countryParent.style.marginBottom = "1rem";
+            countryParent.style.color = countryTxt;
+            countryParent.querySelectorAll("a").forEach(function(a) { a.style.color = countryTxt; });
+        }
+        document.querySelectorAll(".country-links a").forEach(function(link) {
+            link.style.background = colors.white;
+            link.style.color = colors.c0;
+            link.style.border = "1px solid " + colors.c0;
+        });
+
+        // Country toggle
+        var countryToggle = document.querySelector(".country-toggle");
+        if (countryToggle) { countryToggle.style.color = textColorFor(genColor(210, 20, 94)); }
+        var countryTitleText = document.querySelector(".section-title-country-text");
+        if (countryTitleText) {
+            var ct = ["Explore by Country","Destinations","Travel by Country","Countries","Browse by Country","Where to Go"];
+            countryTitleText.textContent = ct[domainHash % 6];
+        }
+
+        // Must Read title
+        var mustReadTitles = ["Must Read", "Editor's Pick", "Featured", "Top Pick", "Recommended", "Highlight"];
+        var mrt = document.querySelector("#homeFeaturedWrap h2");
+        if (mrt) { mrt.textContent = mustReadTitles[domainHash % 6]; mrt.style.color = textColorFor(colors.c5); }
+
+        // Welcome text
+        var wp = document.getElementById("welcomePara");
+        if (wp) {
+            var welcomes = [
+                "Welcome to " + title + " — discover amazing destinations and hidden gems.",
+                "Explore the world with " + title + " — travel guides and inspiration.",
+                title + " brings you the best vacation ideas and destination reviews.",
+                "Plan your adventure with " + title + " — top destinations and travel tips."
+            ];
+            wp.textContent = welcomes[domainHash % welcomes.length];
+        }
+
+        // Footer text
+        var fp = document.getElementById("footerPara");
+        if (fp) {
+            var footers = [
+                "Discover the beauty of the world through " + title + ".",
+                "Thank you for visiting " + title + ". Happy travels!",
+                title + " — your travel inspiration hub.",
+                "Keep exploring with " + title + ". New guides added regularly."
+            ];
+            fp.textContent = footers[domainHash % footers.length];
+        }
+
+        // Hover effects
+        var hoverEffects = ["hover-lift", "hover-scale", "hover-shadow"];
+        document.querySelectorAll(".latest-card, .popular-item, .home-grid-card").forEach(function(card, idx) {
+            card.classList.add(hoverEffects[(domainHash + idx) % hoverEffects.length]);
+        });
+
+        // Urutan section
         var container = document.querySelector(".homepage-container");
         if (container) {
             container.style.display = "flex";
             container.style.flexDirection = "column";
-            var sections = container.querySelectorAll(".section-order");
+            var secs = container.querySelectorAll(".section-order");
             function SeededRandom(seed) { this.seed = seed; this.next = function() { this.seed = (this.seed * 1103515245 + 12345) & 0x7fffffff; return this.seed / 0x7fffffff; }; }
             var rng = new SeededRandom(domainHash + 999);
-            var orders = Array.from({length: sections.length}, function(_, i) { return i; });
+            var orders = Array.from({length: secs.length}, function(_, i) { return i; });
             orders.sort(function() { return rng.next() - 0.5; });
-            sections.forEach(function(sec, idx) {
-                sec.style.order = orders[idx];
-            });
-        }
-
-        // Variasi hover effects
-        var hoverEffects = ["hover-lift", "hover-scale", "hover-shadow"];
-        var allCards = document.querySelectorAll(".latest-card, .popular-item, .home-grid-card");
-        allCards.forEach(function(card, idx) {
-            card.classList.add(hoverEffects[(domainHash + idx) % hoverEffects.length]);
-        });
-
-        // Variasi Must Read title
-        var mustReadTitles = ["Must Read", "Editor's Pick", "Featured", "Top Pick", "Recommended", "Highlight"];
-        var mrt = document.querySelector("#homeFeaturedWrap h2");
-        if (mrt) mrt.textContent = mustReadTitles[domainHash % mustReadTitles.length];
-
-        // Variasi paragraf style
-        var paraStyles = [
-            "font-style:normal;",
-            "font-style:italic;",
-            "border-left:3px solid " + accentColor + ";padding-left:12px;",
-            "text-align:center;",
-            "font-weight:500;",
-            "background:" + accentLight + ";padding:12px 16px;border-radius:8px;"
-        ];
-        var wp = document.getElementById("welcomePara");
-        var fp = document.getElementById("footerPara");
-        if (wp && wp.getAttribute("style") === null) wp.setAttribute("style", paraStyles[domainHash % paraStyles.length]);
-        if (fp && fp.getAttribute("style") === null) fp.setAttribute("style", paraStyles[(domainHash + 1) % paraStyles.length]);
-
-        // Variasi welcome & footer text
-        if (wp) {
-            var welcomes = [
-                "Welcome to " + title + ", a travel blog about amazing destinations around the world. Discover beautiful places, hidden gems, and travel tips.",
-                "Explore the world with " + title + ". Your guide to unforgettable vacations, stunning locations, and travel inspiration.",
-                title + " brings you the best travel guides, vacation ideas, and destination reviews. Start your journey here.",
-                "Plan your next adventure with " + title + ". We cover top destinations, travel hacks, and must-visit places.",
-                "Welcome to " + title + " — your travel companion for discovering new countries, cultures, and experiences.",
-                title + " is a travel blog dedicated to helping you find the perfect vacation spot. Browse our latest posts."
-            ];
-            wp.textContent = welcomes[domainHash % welcomes.length];
-        }
-        if (fp) {
-            var footers = [
-                "Discover the beauty of the world through " + title + ". Explore stunning destinations, travel guides, and more.",
-                "Thank you for visiting " + title + ". We hope our travel guides inspire your next vacation.",
-                title + " — your trusted source for travel inspiration and destination guides.",
-                "Keep exploring with " + title + ". New destinations and travel tips added regularly.",
-                "Find your next adventure on " + title + ". Browse our collection of travel stories and guides.",
-                "Travel far, travel often. " + title + " is here to guide your journey."
-            ];
-            fp.textContent = footers[domainHash % footers.length];
+            secs.forEach(function(sec, idx) { sec.style.order = orders[idx]; });
         }
 
         // Latest layout
         var latestGrid = document.querySelector(".latest-grid");
         if (latestGrid) { var ll = ["grid-3","grid-2","grid-3","list-row","grid-2","grid-3"]; latestGrid.classList.add(ll[domainHash % 6]); }
 
-        var latestCards = document.querySelectorAll(".latest-card");
-        var cardStyles = ["card-accent-top","card-accent-left","card-bg-tint"];
-        latestCards.forEach(function(card, idx) { card.classList.add(cardStyles[(domainHash + idx) % cardStyles.length]); });
-
         // Popular layout
         var popularList = document.getElementById("popularList");
-        if (popularList) {
-            var pl = ["grid-2","list-1","grid-2","grid-4","list-1","grid-2"]; popularList.classList.add(pl[domainHash % 6]);
-            var popItems = popularList.querySelectorAll(".popular-item");
-            var popStyles = ["pop-accent-border","pop-bg-tint","pop-shadow-color"];
-            popItems.forEach(function(item, idx) { item.classList.add(popStyles[(domainHash + idx) % popStyles.length]); });
-        }
+        if (popularList) { var pl = ["grid-2","list-1","grid-2","grid-4","list-1","grid-2"]; popularList.classList.add(pl[domainHash % 6]); }
 
         // Country shuffle + layout
         var countryGrid = document.querySelector(".country-links");
@@ -314,10 +342,8 @@ layout: null
             var cl = ["grid-6","grid-4","grid-3","pills","list-2","masonry"]; countryGrid.classList.add(cl[domainHash % 6]);
         }
 
-        var countryTitleText = document.querySelector(".section-title-country-text");
-        if (countryTitleText) { var ct = ["Explore by Country","Destinations","Travel by Country","Countries","Browse by Country","Where to Go"]; countryTitleText.textContent = ct[domainHash % 6]; }
-
         // Menu toggle
+        var menuPanel = document.getElementById("blogMenuPanel");
         var toggleBtnBlog = document.getElementById("blogMenuToggle"), iconMenuBlog = document.getElementById("blogIconMenu"), iconCloseBlog = document.getElementById("blogIconClose");
         function updateBlogMenuPosition() { if (menuPanel && menuPanel.style.display === "block" && toggleBtnBlog) { var btnRect = toggleBtnBlog.getBoundingClientRect(); menuPanel.style.top = (btnRect.bottom + 5) + "px"; menuPanel.style.right = (window.innerWidth - btnRect.right) + "px"; } }
         if (toggleBtnBlog && menuPanel && iconMenuBlog && iconCloseBlog) {
@@ -330,39 +356,37 @@ layout: null
     </script>
 
     <style>
-        :root{--accent:#0d6efd;--accent-light:#e8f1ff;--card-radius:8px;--card-shadow:0 1px 3px rgba(0,0,0,0.06);}
+        :root{--c0:#0d6efd;--c1:#e8f1ff;--c2:#0d6efd;--c3:#0d6efd;--c4:#0d6efd;--c5:#0d6efd;--c6:#0d6efd;--c7:#0d6efd;--c8:#0d6efd;--c9:#0d6efd;--c10:#0d6efd;--c11:#0d6efd;--bg:#fafafa;--dark:#222;--white:#fff;--lightGray:#f5f5f5;--card-radius:8px;--card-shadow:0 2px 8px rgba(0,0,0,0.06);}
         
-        .blog-header-main.floating-header-main{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.08);box-sizing:border-box;position:fixed;top:0;left:0;right:0;z-index:1001;}
+        .blog-header-main.floating-header-main{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#fff;box-sizing:border-box;position:fixed;top:0;left:0;right:0;z-index:1001;}
         .header-content-main{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1200px;margin:0 auto;gap:16px;}
         .domain-avatar-main{flex-shrink:0;line-height:0;}
-        .blog-title-main{margin:0;font-size:20px;color:#000;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700;letter-spacing:-0.02em;line-height:1.2;}
+        .blog-title-main{margin:0;font-size:20px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700;}
         .nav-actions-main{flex-shrink:0;margin:0;}
-        .menu-btn-main{display:flex;align-items:center;justify-content:center;width:36px;height:36px;background:transparent;border:none;color:#000;padding:0;cursor:pointer;border-radius:0;transition:opacity 0.2s ease;}
-        .menu-btn-main:hover{opacity:0.6;background:transparent;}
-        .menu-icon-main{width:24px;height:24px;stroke:#000;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+        .menu-btn-main{display:flex;align-items:center;justify-content:center;width:36px;height:36px;background:transparent;border:none;padding:0;cursor:pointer;}
+        .menu-btn-main:hover{opacity:0.6;}
+        .menu-icon-main{width:24px;height:24px;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
         #blogMenuPanel{display:none;background:#fff;border:1px solid #e0e0e0;padding:16px;position:fixed;z-index:1000;box-shadow:0 4px 20px rgba(0,0,0,0.12);border-radius:10px;}
         #blogMenuPanel ul{list-style:none;margin:0;padding:0;}
         #blogMenuPanel li{margin:0;padding:0;}
-        #blogMenuPanel a{color:#000;text-decoration:none;display:block;border-radius:6px;transition:all 0.2s ease;font-weight:500;white-space:nowrap;}
+        #blogMenuPanel a{color:#000;text-decoration:none;display:block;border-radius:6px;padding:10px 14px;font-size:14px;transition:all 0.2s ease;font-weight:500;white-space:nowrap;}
         #blogMenuPanel a:hover{background:rgba(0,0,0,0.05);}
         .header-spacer{height:60px;}
         .homepage-container{max-width:1200px;margin:0 auto;padding:1.5rem;}
 
         .section-title{font-size:1.1rem;font-weight:700;margin-bottom:1rem;padding-bottom:0.5rem;display:flex;align-items:center;justify-content:space-between;}
-        .section-title a{font-size:0.7rem;font-weight:500;text-decoration:none;color:var(--accent);}
+        .section-title a{font-size:0.7rem;font-weight:500;text-decoration:none;}
 
         .country-toggle{display:inline-flex;align-items:center;gap:0.4rem;cursor:pointer;font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;padding-bottom:0.5rem;user-select:none;}
-        .country-toggle .toggle-arrow{font-size:0.7rem;transition:transform 0.2s;color:var(--accent);}
+        .country-toggle .toggle-arrow{font-size:0.7rem;transition:transform 0.2s;}
         .country-toggle.open .toggle-arrow{transform:rotate(90deg);}
         .country-links-wrap{display:none;margin-bottom:1.5rem;}
         .country-links-wrap.open{display:block;}
 
-        /* HOVER EFFECTS */
         .hover-lift:hover{transform:translateY(-4px)!important;}
         .hover-scale:hover{transform:scale(1.02)!important;}
-        .hover-shadow:hover{box-shadow:0 8px 24px rgba(0,0,0,0.12)!important;}
+        .hover-shadow:hover{box-shadow:0 8px 24px rgba(0,0,0,0.15)!important;}
 
-        /* LATEST */
         .latest-section{margin-bottom:1.5rem;}
         .latest-grid{display:grid;gap:1rem;}
         .latest-grid.grid-3{grid-template-columns:repeat(3,1fr);}
@@ -370,113 +394,89 @@ layout: null
         .latest-grid.list-row{grid-template-columns:1fr;}
         .latest-grid.list-row .latest-card{flex-direction:row;gap:1rem;}
         .latest-grid.list-row .latest-img{width:200px;flex-shrink:0;}
-        .latest-card{background:#fff;border:1px solid #e5e5e5;border-radius:var(--card-radius);overflow:hidden;transition:all 0.15s ease;box-shadow:var(--card-shadow);display:flex;flex-direction:column;}
-        .latest-card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.08);}
-        .latest-card.card-accent-top{border-top:3px solid var(--accent);}
-        .latest-card.card-accent-left{border-left:3px solid var(--accent);}
-        .latest-card.card-bg-tint{background:var(--accent-light);border-color:transparent;}
+        .latest-card{border-radius:var(--card-radius);overflow:hidden;transition:all 0.15s ease;box-shadow:var(--card-shadow);display:flex;flex-direction:column;}
         .latest-img{width:100%;aspect-ratio:16/9;overflow:hidden;flex-shrink:0;}
         .latest-img img{width:100%;height:100%;object-fit:cover;}
         .latest-body{padding:0.75rem;flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden;}
         .latest-card h3{font-size:0.9rem;margin-bottom:0.35rem;flex:1;word-break:break-word;}
-        .latest-card h3 a{color:#111;text-decoration:none;}
-        .latest-card h3 a:hover{color:var(--accent);}
-        .latest-meta{font-size:0.65rem;color:#888;margin-top:auto;}
+        .latest-card h3 a{text-decoration:none;}
+        .latest-meta{font-size:0.65rem;margin-top:auto;}
         .latest-card .excerpt.spo{word-break:break-word;overflow-wrap:break-word;max-width:100%;overflow:hidden;}
 
-        /* POPULAR */
         .popular-section{margin-bottom:1.5rem;}
         .popular-list{display:grid;gap:0.75rem;}
         .popular-list.grid-2{grid-template-columns:repeat(2,1fr);}
         .popular-list.list-1{grid-template-columns:1fr;}
         .popular-list.grid-4{grid-template-columns:repeat(4,1fr);}
-        .popular-item{display:flex;align-items:flex-start;gap:0.75rem;background:#fff;border:1px solid #e5e5e5;border-radius:var(--card-radius);padding:0.75rem;transition:all 0.15s ease;box-shadow:var(--card-shadow);word-wrap:break-word;overflow-wrap:break-word;max-width:100%;overflow:hidden;}
-        .popular-item:hover{box-shadow:0 4px 12px rgba(0,0,0,0.08);}
-        .popular-item.pop-accent-border{border-left:3px solid var(--accent);}
-        .popular-item.pop-bg-tint{background:var(--accent-light);border-color:transparent;}
-        .popular-item.pop-shadow-color{box-shadow:0 2px 8px var(--accent)20;}
+        .popular-item{display:flex;align-items:flex-start;gap:0.75rem;border-radius:var(--card-radius);padding:0.75rem;transition:all 0.15s ease;box-shadow:var(--card-shadow);word-wrap:break-word;overflow-wrap:break-word;max-width:100%;overflow:hidden;}
         .popular-img{width:70px;min-width:70px;max-width:70px;aspect-ratio:16/9;flex-shrink:0;border-radius:4px;overflow:hidden;}
         .popular-img img{width:100%;height:100%;object-fit:cover;}
         .popular-content{flex:1;min-width:0;max-width:100%;overflow:hidden;}
         .popular-content h3{font-size:0.85rem;margin-bottom:0.25rem;word-break:break-word;overflow-wrap:break-word;max-width:100%;}
-        .popular-content h3 a{color:#111;text-decoration:none;word-break:break-word;}
-        .popular-content h3 a:hover{color:var(--accent);}
-        .popular-content p{font-size:0.7rem;color:#888;word-break:break-word;overflow-wrap:break-word;max-width:100%;}
+        .popular-content h3 a{text-decoration:none;word-break:break-word;}
+        .popular-content p{font-size:0.7rem;word-break:break-word;overflow-wrap:break-word;max-width:100%;}
         .popular-content .excerpt.spo{word-break:break-word;overflow-wrap:break-word;max-width:100%;overflow:hidden;}
 
-        /* COUNTRY */
         .country-links{display:grid;gap:0.4rem;}
         .country-links.grid-6{grid-template-columns:repeat(6,1fr);}
         .country-links.grid-4{grid-template-columns:repeat(4,1fr);}
         .country-links.grid-3{grid-template-columns:repeat(3,1fr);}
         .country-links.pills{display:flex;flex-wrap:wrap;gap:0.35rem;}
-        .country-links.pills a{border-radius:20px;padding:0.3rem 0.7rem;font-size:0.65rem;background:#f5f5f5;border:1px solid #e0e0e0;}
+        .country-links.pills a{border-radius:20px;padding:0.3rem 0.7rem;font-size:0.65rem;}
         .country-links.list-2{grid-template-columns:repeat(2,1fr);}
         .country-links.list-2 a{text-align:left;padding:0.5rem 0.75rem;font-size:0.72rem;}
         .country-links.masonry{columns:3;display:block;gap:0.4rem;}
         .country-links.masonry a{display:inline-block;width:100%;margin-bottom:0.4rem;break-inside:avoid;}
-        .country-links a{display:block;padding:0.4rem 0.5rem;background:#fff;border:1px solid #e5e5e5;border-radius:var(--card-radius);font-size:0.68rem;color:#333;text-decoration:none;text-align:center;transition:all 0.15s ease;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-        .country-links a:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light);}
+        .country-links a{display:block;padding:0.4rem 0.5rem;border-radius:var(--card-radius);font-size:0.68rem;text-decoration:none;text-align:center;transition:all 0.15s ease;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-        /* FEATURED HOME */
         #homeFeaturedWrap{margin-top:40px;}
         #homeFeaturedWrap h2{font-size:1.3rem;font-weight:700;margin-bottom:1rem;padding-bottom:0.5rem;}
-        .home-featured-main{background:#fff;border-radius:20px;overflow:hidden;margin-bottom:36px;box-shadow:0 10px 30px rgba(0,0,0,0.05);}
+        .home-featured-main{border-radius:20px;overflow:hidden;margin-bottom:36px;box-shadow:0 10px 30px rgba(0,0,0,0.08);}
         .home-featured-thumb{aspect-ratio:16/9;overflow:hidden;}
         .home-featured-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
         .home-featured-content{padding:28px;}
         .home-featured-title{font-size:32px;line-height:1.3;margin:0 0 14px;}
-        .home-featured-title a{text-decoration:none;color:#111;}
-        .home-featured-title a:hover{color:var(--accent);}
-        .home-featured-desc{font-size:16px;line-height:1.7;color:#666;margin:0;}
+        .home-featured-title a{text-decoration:none;}
+        .home-featured-desc{font-size:16px;line-height:1.7;margin:0;}
         .home-featured-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
-        .home-grid-card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.04);transition:0.3s;}
+        .home-grid-card{border-radius:18px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.06);transition:0.3s;}
         .home-grid-card:hover{transform:translateY(-4px);}
         .home-grid-thumb{aspect-ratio:16/9;overflow:hidden;}
         .home-grid-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
         .home-grid-content{padding:18px;}
         .home-grid-title{font-size:19px;line-height:1.4;margin:0 0 10px;}
-        .home-grid-title a{text-decoration:none;color:#111;}
-        .home-grid-title a:hover{color:var(--accent);}
-        .home-grid-desc{font-size:14px;line-height:1.7;color:#666;margin:0;}
+        .home-grid-title a{text-decoration:none;}
+        .home-grid-desc{font-size:14px;line-height:1.7;margin:0;}
 
         @media(min-width:1025px){
-            .blog-header-main.floating-header-main{padding:12px 24px;}.header-content-main{max-width:1400px;}.blog-title-main{font-size:22px;}.menu-btn-main{width:40px;height:40px;}.menu-icon-main{width:26px;height:26px;}#blogMenuPanel{top:65px;right:24px;padding:20px;min-width:220px;max-width:250px;}#blogMenuPanel a{padding:12px 16px;font-size:15px;margin-bottom:4px;}.header-spacer{height:70px;}
+            .blog-header-main.floating-header-main{padding:12px 24px;}.header-content-main{max-width:1400px;}.blog-title-main{font-size:22px;}.menu-btn-main{width:40px;height:40px;}.menu-icon-main{width:26px;height:26px;}#blogMenuPanel{top:65px;right:24px;padding:20px;min-width:220px;max-width:250px;}.header-spacer{height:70px;}
         }
         @media(max-width:1024px) and (min-width:769px){
             .latest-grid.grid-3{grid-template-columns:repeat(2,1fr);}.popular-list.grid-4{grid-template-columns:repeat(2,1fr);}
             .country-links.grid-6{grid-template-columns:repeat(4,1fr);}.country-links.grid-4{grid-template-columns:repeat(3,1fr);}.country-links.grid-3{grid-template-columns:repeat(2,1fr);}.country-links.masonry{columns:2;}
-            .home-featured-grid{grid-template-columns:repeat(2,1fr);}.home-featured-title{font-size:28px;}
-            .header-spacer{height:58px;}
+            .home-featured-grid{grid-template-columns:repeat(2,1fr);}.home-featured-title{font-size:28px;}.header-spacer{height:58px;}
         }
         @media(max-width:768px){
             .latest-grid.grid-3,.latest-grid.grid-2{grid-template-columns:1fr;}.popular-list.grid-2,.popular-list.grid-4{grid-template-columns:1fr;}
             .latest-grid.list-row .latest-card{flex-direction:column;}.latest-grid.list-row .latest-img{width:100%;}
             .country-links.grid-6{grid-template-columns:repeat(3,1fr);}.country-links.grid-4{grid-template-columns:repeat(2,1fr);}.country-links.grid-3{grid-template-columns:repeat(2,1fr);}.country-links.list-2{grid-template-columns:1fr;}.country-links.masonry{columns:2;}
-            #homeFeaturedWrap{margin-top:20px;}
-            .home-featured-main{border-radius:16px;margin-bottom:24px;}
-            .home-featured-content{padding:18px;}
-            .home-featured-title{font-size:22px;line-height:1.4;margin-bottom:10px;}
-            .home-featured-desc{font-size:14px;line-height:1.7;}
-            .home-featured-grid{grid-template-columns:repeat(2,1fr);gap:14px;}
-            .home-grid-card{border-radius:14px;}
-            .home-grid-content{padding:12px;}
-            .home-grid-title{font-size:14px;line-height:1.4;margin-bottom:6px;}
-            .home-grid-desc{font-size:12px;line-height:1.5;}
+            #homeFeaturedWrap{margin-top:20px;}.home-featured-main{border-radius:16px;margin-bottom:24px;}.home-featured-content{padding:18px;}
+            .home-featured-title{font-size:22px;}.home-featured-desc{font-size:14px;}
+            .home-featured-grid{grid-template-columns:repeat(2,1fr);gap:14px;}.home-grid-card{border-radius:14px;}.home-grid-content{padding:12px;}
+            .home-grid-title{font-size:14px;}.home-grid-desc{font-size:12px;}
             .homepage-container{padding:1rem;}.header-spacer{height:52px;}
         }
         @media(max-width:480px){
             .popular-item{flex-direction:column;align-items:flex-start;gap:0.5rem;}
             .popular-img{width:100%;min-width:100%;max-width:100%;aspect-ratio:16/9;}
-            .country-links.grid-6{grid-template-columns:repeat(2,1fr);}.country-links.masonry{columns:1;}
-            .header-spacer{height:48px;}
+            .country-links.grid-6{grid-template-columns:repeat(2,1fr);}.country-links.masonry{columns:1;}.header-spacer{height:48px;}
         }
     </style>
 
     <div class="header-spacer"></div>
     <div class="homepage-container">
 
-        <p id="welcomePara" class="section-order">Welcome to my travel blog. Discover amazing destinations, travel tips, and hidden gems around the world.</p>
+        <p id="welcomePara" class="section-order">Welcome to my travel blog.</p>
 
         <!-- LATEST POSTS -->
         {% assign latest_posts = site.categories.pisah01a | limit: 15 %}
@@ -524,50 +524,34 @@ layout: null
         </div>
         {% endif %}
 
-        <!-- MUST READ (Featured + Grid) -->
+        <!-- MUST READ -->
         <div id="homeFeaturedWrap" class="section-order">
             <h2>Must Read</h2>
             {% assign main_post = site.categories.pisah01 | first %}
-
             {% if main_post %}
             <div class="home-featured-main">
                 <a href="{{ main_post.url }}">
                     {% if main_post.image %}
-                    <div class="home-featured-thumb">
-                        <img src="{{ main_post.image | relative_url }}" alt="{{ main_post.title }}" loading="lazy">
-                    </div>
+                    <div class="home-featured-thumb"><img src="{{ main_post.image | relative_url }}" alt="{{ main_post.title }}" loading="lazy"></div>
                     {% endif %}
                 </a>
                 <div class="home-featured-content">
-                    <h2 class="home-featured-title">
-                        <a href="{{ main_post.url }}">{{ main_post.title }}</a>
-                    </h2>
-                    {% if main_post.description %}
-                    <p class="home-featured-desc">{{ main_post.description }}</p>
-                    {% endif %}
+                    <h2 class="home-featured-title"><a href="{{ main_post.url }}">{{ main_post.title }}</a></h2>
+                    {% if main_post.description %}<p class="home-featured-desc">{{ main_post.description }}</p>{% endif %}
                     {% assign before_svg = main_post.content | split: '<p>' | first %}
                     <div class="excerpt spo">{{ before_svg }}</div>
                 </div>
             </div>
             {% endif %}
-
             <div class="home-featured-grid">
                 {% for post in site.categories.pisah01 limit:4 offset:1 %}
                 <div class="home-grid-card">
                     {% if post.image %}
-                    <div class="home-grid-thumb">
-                        <a href="{{ post.url }}">
-                            <img src="{{ post.image | relative_url }}" alt="{{ post.title }}" loading="lazy">
-                        </a>
-                    </div>
+                    <div class="home-grid-thumb"><a href="{{ post.url }}"><img src="{{ post.image | relative_url }}" alt="{{ post.title }}" loading="lazy"></a></div>
                     {% endif %}
                     <div class="home-grid-content">
-                        <h3 class="home-grid-title">
-                            <a href="{{ post.url }}">{{ post.title }}</a>
-                        </h3>
-                        {% if post.description %}
-                        <p class="home-grid-desc">{{ post.description }}</p>
-                        {% endif %}
+                        <h3 class="home-grid-title"><a href="{{ post.url }}">{{ post.title }}</a></h3>
+                        {% if post.description %}<p class="home-grid-desc">{{ post.description }}</p>{% endif %}
                         {% assign before_svg = post.content | split: '<p>' | first %}
                         <div class="excerpt spo">{{ before_svg }}</div>
                     </div>
@@ -589,7 +573,7 @@ layout: null
             </div>
         </div>
 
-        <p id="footerPara" class="section-order">Discover the beauty of the world through our travel blog. Explore stunning destinations, travel guides, and more.</p>
+        <p id="footerPara" class="section-order">Discover the beauty of the world.</p>
 
     </div>
 
