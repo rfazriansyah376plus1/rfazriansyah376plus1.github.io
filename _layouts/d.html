@@ -182,26 +182,7 @@ layout: null
         var s3 = document.createElement("script"); s3.type = "application/ld+json"; s3.textContent = JSON.stringify(imgSchema); document.head.appendChild(s3);
         {% endif %}
 
-        // 4. AggregateRating - CreativeWork
-        function SeededRandom(seed) { this.seed = seed; this.next = function() { this.seed = (this.seed * 1103515245 + 12345) & 0x7fffffff; return this.seed / 0x7fffffff; }; }
-        var rng = new SeededRandom(domainHash);
-        var ratingValue = (3.5 + rng.next() * 1.5).toFixed(1);
-        var reviewCount = Math.floor(50 + rng.next() * 450);
-        var ratingSchema = {
-            "@context": "https://schema.org",
-            "@type": "CreativeWork",
-            "name": "{{ page.title | escape }}",
-            "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": ratingValue,
-                "reviewCount": reviewCount,
-                "bestRating": "5",
-                "worstRating": "1"
-            }
-        };
-        var s4 = document.createElement("script"); s4.type = "application/ld+json"; s4.textContent = JSON.stringify(ratingSchema); document.head.appendChild(s4);
-
-        // 5. DiscussionForumPosting
+        // 4. DiscussionForumPosting - author dengan url
         var forumSchema = {
             "@context": "https://schema.org",
             "@type": "DiscussionForumPosting",
@@ -210,11 +191,13 @@ layout: null
             "url": pageUrl,
             "mainEntityOfPage": pageUrl,
             "datePublished": isoDate,
-            "author": { "@type": "Organization", "name": authorName },
+            "author": { "@type": "Organization", "name": authorName, "url": pageUrl },
             "publisher": { "@type": "Organization", "name": authorName }
             {% if page.image %},"image": pageImage{% endif %}
         };
-        var s5 = document.createElement("script"); s5.type = "application/ld+json"; s5.textContent = JSON.stringify(forumSchema); document.head.appendChild(s5);
+        var s4 = document.createElement("script"); s4.type = "application/ld+json"; s4.textContent = JSON.stringify(forumSchema); document.head.appendChild(s4);
+
+        // AggregateRating DIHAPUS TOTAL
 
         // ========== TAMPILAN ==========
 
