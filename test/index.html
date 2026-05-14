@@ -58,7 +58,6 @@ layout: null
 <body>
 <div loading="lazy">
 
-    <!-- HEADER -->
     <header id="blogHeader" class="blog-header-main floating-header-main" loading="lazy">
         <div class="header-content-main">
             <div id="domainAvatar" class="domain-avatar-main" style="flex-shrink:0;margin-right:10px;"></div>
@@ -117,112 +116,89 @@ layout: null
         }
 
         function textColorFor(bgHex) {
-            var r = parseInt(bgHex.slice(1,3), 16);
-            var g = parseInt(bgHex.slice(3,5), 16);
-            var b = parseInt(bgHex.slice(5,7), 16);
+            var r = parseInt(bgHex.slice(1,3), 16), g = parseInt(bgHex.slice(3,5), 16), b = parseInt(bgHex.slice(5,7), 16);
             var lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
             return lum > 0.55 ? "#111111" : "#ffffff";
         }
 
-        function genColor(offset, sat, light) {
-            return hslToHex((hue + offset) % 360, sat, light);
-        }
+        function genColor(offset, sat, light) { return hslToHex((hue + offset) % 360, sat, light); }
 
         var colors = {
-            c0:  genColor(0, 70, 50),
-            c1:  genColor(0, 40, 88),
-            c2:  genColor(30, 60, 55),
-            c3:  genColor(60, 55, 60),
-            c4:  genColor(90, 50, 65),
-            c5:  genColor(120, 45, 70),
-            c6:  genColor(150, 50, 60),
-            c7:  genColor(180, 55, 55),
-            c8:  genColor(210, 60, 50),
-            c9:  genColor(240, 50, 65),
-            c10: genColor(270, 55, 60),
-            c11: genColor(300, 50, 55),
-            bg:  genColor(0, 10, 96),
-            dark: genColor(180, 20, 22),
-            white: "#ffffff"
+            c0:genColor(0,70,50),c1:genColor(0,40,88),c2:genColor(30,60,55),c3:genColor(60,55,60),
+            c4:genColor(90,50,65),c5:genColor(120,45,70),c6:genColor(150,50,60),c7:genColor(180,55,55),
+            c8:genColor(210,60,50),c9:genColor(240,50,65),c10:genColor(270,55,60),c11:genColor(300,50,55),
+            bg:genColor(0,10,96),dark:genColor(180,20,22),white:"#ffffff"
         };
 
         var styleCSS = ":root {";
-        for (var key in colors) { styleCSS += "--" + key + ":" + colors[key] + ";"; }
+        for (var key in colors) styleCSS += "--" + key + ":" + colors[key] + ";";
         styleCSS += "--card-radius:8px;--card-shadow:0 2px 8px rgba(0,0,0,0.06);}";
-        var styleEl = document.createElement("style");
-        styleEl.id = "domain-colors";
-        styleEl.textContent = styleCSS;
-        document.head.appendChild(styleEl);
+        var styleEl = document.createElement("style"); styleEl.id = "domain-colors"; styleEl.textContent = styleCSS; document.head.appendChild(styleEl);
 
-        var avatarBg = genColor(0, 60, 50);
+        var avatarBg = genColor(0,60,50);
         var words = fullName.split("-"), initials = "";
         for (var w = 0; w < Math.min(words.length, 3); w++) { if (words[w].length > 0) initials += words[w].charAt(0).toUpperCase(); }
         if (initials.length < 2) initials = fullName.substring(0, 3).toUpperCase();
-        document.getElementById("domainAvatar").innerHTML = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"40\" height=\"40\" viewBox=\"0 0 40 40\"><rect width=\"40\" height=\"40\" rx=\"20\" fill=\"" + avatarBg + "\"/><text x=\"20\" y=\"26\" text-anchor=\"middle\" fill=\"#fff\" font-size=\"18\" font-weight=\"bold\" font-family=\"-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif\">" + initials + "</text></svg>";
+        document.getElementById("domainAvatar").innerHTML = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"40\" height=\"40\" viewBox=\"0 0 40 40\"><rect width=\"40\" height=\"40\" rx=\"20\" fill=\"" + avatarBg + "\"/><text x=\"20\" y=\"26\" text-anchor=\"middle\" fill=\"#fff\" font-size=\"18\" font-weight=\"bold\" font-family=\"sans-serif\">" + initials + "</text></svg>";
 
         var header = document.getElementById("blogHeader");
-        var headerBg = genColor(0, 50, 95);
-        var headerText = textColorFor(headerBg);
-        if (header) { header.style.background = headerBg; header.style.boxShadow = "0 2px 12px " + genColor(0, 40, 70) + "30"; }
-        var titleEl = document.getElementById("blogMainTitle");
-        if (titleEl) titleEl.style.color = headerText;
-        var menuBtn = document.getElementById("blogMenuToggle");
-        if (menuBtn) menuBtn.style.color = headerText;
+        var headerBg = genColor(0,50,95), headerText = textColorFor(headerBg);
+        if (header) { header.style.background = headerBg; header.style.boxShadow = "0 2px 12px " + genColor(0,40,70) + "30"; }
+        var titleEl = document.getElementById("blogMainTitle"); if (titleEl) titleEl.style.color = headerText;
+        var menuBtn = document.getElementById("blogMenuToggle"); if (menuBtn) menuBtn.style.color = headerText;
         document.querySelectorAll(".menu-icon-main").forEach(function(icon) { icon.style.stroke = headerText; });
 
-        document.body.style.fontFamily = ["'Segoe UI', sans-serif", "'Inter', sans-serif", "-apple-system, sans-serif", "'Noto Sans', sans-serif"][domainHash % 4];
-        document.body.style.background = genColor(0, 8, 97);
+        document.body.style.fontFamily = ["'Segoe UI',sans-serif","'Inter',sans-serif","-apple-system,sans-serif","'Noto Sans',sans-serif"][domainHash % 4];
+        document.body.style.background = genColor(0,8,97);
 
         function applySection(el, bgKey, pad) {
             if (!el) return;
-            var bg = colors[bgKey];
-            var txt = textColorFor(bg);
-            el.style.background = bg;
-            el.style.color = txt;
+            var bg = colors[bgKey], txt = textColorFor(bg);
+            el.style.background = bg; el.style.color = txt;
             if (pad) { el.style.padding = "20px"; el.style.borderRadius = "12px"; el.style.marginBottom = "1rem"; }
             el.querySelectorAll("a").forEach(function(a) { a.style.color = txt; });
-            el.querySelectorAll("p, .excerpt, .latest-meta, .home-featured-desc, .home-grid-desc").forEach(function(e) {
+            el.querySelectorAll("p,.excerpt,.latest-meta,.home-featured-desc,.home-grid-desc").forEach(function(e) {
                 e.style.color = txt === "#ffffff" ? "rgba(255,255,255,0.8)" : "rgba(0,0,0,0.65)";
             });
         }
 
-        applySection(document.getElementById("welcomePara"), "c2", true);
-        applySection(document.querySelector(".latest-section"), "c3", true);
-        applySection(document.querySelector(".popular-section"), "c4", true);
-        applySection(document.querySelector(".home-featured-main"), "c5", false);
-        applySection(document.getElementById("footerPara"), "dark", true);
+        applySection(document.getElementById("welcomePara"),"c2",true);
+        applySection(document.querySelector(".latest-section"),"c3",true);
+        applySection(document.querySelector(".popular-section"),"c4",true);
+        applySection(document.querySelector(".home-featured-main"),"c5",false);
+        applySection(document.getElementById("footerPara"),"dark",true);
 
         document.querySelectorAll(".home-grid-card").forEach(function(card) {
-            var bg = genColor(120, 25, 94), txt = textColorFor(bg);
-            card.style.background = bg; card.style.border = "1px solid " + genColor(120, 40, 80); card.style.color = txt;
+            var bg = genColor(120,25,94), txt = textColorFor(bg);
+            card.style.background = bg; card.style.border = "1px solid " + genColor(120,40,80); card.style.color = txt;
             card.querySelectorAll("a").forEach(function(a) { a.style.color = txt; });
-            card.querySelectorAll("p, .home-grid-desc").forEach(function(e) { e.style.color = txt === "#ffffff" ? "rgba(255,255,255,0.8)" : "rgba(0,0,0,0.65)"; });
+            card.querySelectorAll("p,.home-grid-desc").forEach(function(e) { e.style.color = txt==="#ffffff"?"rgba(255,255,255,0.8)":"rgba(0,0,0,0.65)"; });
         });
 
         document.querySelectorAll(".latest-card").forEach(function(card, idx) {
             var bg = colors[["c6","c7","c8","c9","c10","c11"][idx % 6]], txt = textColorFor(bg);
             card.style.background = bg; card.style.border = "none"; card.style.color = txt;
             card.querySelectorAll("a").forEach(function(a) { a.style.color = txt; });
-            card.querySelectorAll(".latest-meta, .excerpt").forEach(function(e) { e.style.color = txt === "#ffffff" ? "rgba(255,255,255,0.75)" : "rgba(0,0,0,0.6)"; });
+            card.querySelectorAll(".latest-meta,.excerpt").forEach(function(e) { e.style.color = txt==="#ffffff"?"rgba(255,255,255,0.75)":"rgba(0,0,0,0.6)"; });
         });
 
         document.querySelectorAll(".popular-item").forEach(function(item, idx) {
             var bg = colors[["c8","c9","c10","c11","c6","c7"][idx % 6]], txt = textColorFor(bg);
             item.style.background = bg; item.style.border = "none"; item.style.color = txt;
             item.querySelectorAll("a").forEach(function(a) { a.style.color = txt; });
-            item.querySelectorAll("p, .excerpt").forEach(function(e) { e.style.color = txt === "#ffffff" ? "rgba(255,255,255,0.75)" : "rgba(0,0,0,0.6)"; });
+            item.querySelectorAll("p,.excerpt").forEach(function(e) { e.style.color = txt==="#ffffff"?"rgba(255,255,255,0.75)":"rgba(0,0,0,0.6)"; });
         });
 
         var countryParent = document.querySelector(".country-toggle").parentElement;
         if (countryParent) {
-            var countryBg = genColor(210, 20, 94), countryTxt = textColorFor(countryBg);
+            var countryBg = genColor(210,20,94), countryTxt = textColorFor(countryBg);
             countryParent.style.background = countryBg; countryParent.style.padding = "20px"; countryParent.style.borderRadius = "12px"; countryParent.style.marginBottom = "1rem"; countryParent.style.color = countryTxt;
         }
         document.querySelectorAll(".country-links a").forEach(function(link) {
             link.style.background = colors.white; link.style.color = colors.c0; link.style.border = "1px solid " + colors.c0;
         });
         var countryToggle = document.querySelector(".country-toggle");
-        if (countryToggle) countryToggle.style.color = textColorFor(genColor(210, 20, 94));
+        if (countryToggle) countryToggle.style.color = textColorFor(genColor(210,20,94));
 
         var countryTitleText = document.querySelector(".section-title-country-text");
         if (countryTitleText) countryTitleText.textContent = ["Explore by Country","Destinations","Travel by Country","Countries","Browse by Country","Where to Go"][domainHash % 6];
@@ -231,22 +207,12 @@ layout: null
         if (mrt) { mrt.textContent = ["Must Read","Editor's Pick","Featured","Top Pick","Recommended","Highlight"][domainHash % 6]; mrt.style.color = textColorFor(colors.c5); }
 
         var wp = document.getElementById("welcomePara");
-        if (wp) wp.textContent = [
-            "Welcome to " + title + " — discover amazing destinations and hidden gems.",
-            "Explore the world with " + title + " — travel guides and inspiration.",
-            title + " brings you the best vacation ideas and destination reviews.",
-            "Plan your adventure with " + title + " — top destinations and travel tips."
-        ][domainHash % 4];
+        if (wp) wp.textContent = ["Welcome to " + title + ".","Explore with " + title + ".",title + " - travel guides.",title + " - vacation ideas."][domainHash % 4];
 
         var fp = document.getElementById("footerPara");
-        if (fp) fp.textContent = [
-            "Discover the beauty of the world through " + title + ".",
-            "Thank you for visiting " + title + ". Happy travels!",
-            title + " — your travel inspiration hub.",
-            "Keep exploring with " + title + ". New guides added regularly."
-        ][domainHash % 4];
+        if (fp) fp.textContent = ["Discover through " + title + ".","Thanks for visiting " + title + ".",title + " - inspiration.","Explore with " + title + "."][domainHash % 4];
 
-        document.querySelectorAll(".latest-card, .popular-item, .home-grid-card").forEach(function(card, idx) {
+        document.querySelectorAll(".latest-card,.popular-item,.home-grid-card").forEach(function(card, idx) {
             card.classList.add(["hover-lift","hover-scale","hover-shadow"][(domainHash + idx) % 3]);
         });
 
@@ -276,61 +242,66 @@ layout: null
             countryGrid.classList.add(["grid-6","grid-4","grid-3","pills","list-2","masonry"][domainHash % 6]);
         }
 
-        // MENU TOGGLE - FIXED
-        var menuPanel = document.getElementById("blogMenuPanel");
+        // MENU TOGGLE - sama persis dengan kode Anda yang benar
         var toggleBtnBlog = document.getElementById("blogMenuToggle");
+        var menuPanelBlog = document.getElementById("blogMenuPanel");
         var iconMenuBlog = document.getElementById("blogIconMenu");
         var iconCloseBlog = document.getElementById("blogIconClose");
 
-        if (toggleBtnBlog && menuPanel) {
-            toggleBtnBlog.addEventListener("click", function(e) {
-                e.stopPropagation();
-                menuPanel.classList.toggle("show");
-                var isVisible = menuPanel.classList.contains("show");
-                if (iconMenuBlog) iconMenuBlog.style.display = isVisible ? "none" : "inline";
-                if (iconCloseBlog) iconCloseBlog.style.display = isVisible ? "inline" : "none";
-                if (isVisible) {
-                    var btnRect = toggleBtnBlog.getBoundingClientRect();
-                    menuPanel.style.top = (btnRect.bottom + 5) + "px";
-                    menuPanel.style.right = (window.innerWidth - btnRect.right) + "px";
-                }
-            });
+        toggleBtnBlog.addEventListener("click", function(e) {
+            e.stopPropagation();
+            var isVisible = menuPanelBlog.style.display === "block";
+            menuPanelBlog.style.display = isVisible ? "none" : "block";
+            iconMenuBlog.style.display = isVisible ? "inline" : "none";
+            iconCloseBlog.style.display = isVisible ? "none" : "inline";
+            if (!isVisible) {
+                var btnRect = toggleBtnBlog.getBoundingClientRect();
+                menuPanelBlog.style.top = (btnRect.bottom + 5) + "px";
+                menuPanelBlog.style.right = (window.innerWidth - btnRect.right) + "px";
+            }
+        });
 
-            document.addEventListener("click", function(e) {
-                if (menuPanel.classList.contains("show")) {
-                    if (!menuPanel.contains(e.target) && e.target !== toggleBtnBlog) {
-                        menuPanel.classList.remove("show");
-                        if (iconMenuBlog) iconMenuBlog.style.display = "inline";
-                        if (iconCloseBlog) iconCloseBlog.style.display = "none";
-                    }
-                }
-            });
+        document.addEventListener("click", function(e) {
+            if (!menuPanelBlog.contains(e.target) && !toggleBtnBlog.contains(e.target) && menuPanelBlog.style.display === "block") {
+                menuPanelBlog.style.display = "none";
+                iconMenuBlog.style.display = "inline";
+                iconCloseBlog.style.display = "none";
+            }
+        });
 
-            document.addEventListener("keydown", function(e) {
-                if (e.key === "Escape" && menuPanel.classList.contains("show")) {
-                    menuPanel.classList.remove("show");
-                    if (iconMenuBlog) iconMenuBlog.style.display = "inline";
-                    if (iconCloseBlog) iconCloseBlog.style.display = "none";
-                }
-            });
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape" && menuPanelBlog.style.display === "block") {
+                menuPanelBlog.style.display = "none";
+                iconMenuBlog.style.display = "inline";
+                iconCloseBlog.style.display = "none";
+            }
+        });
+
+        function updateBlogMenuPosition() {
+            if (menuPanelBlog.style.display === "block") {
+                var btnRect = toggleBtnBlog.getBoundingClientRect();
+                menuPanelBlog.style.top = (btnRect.bottom + 5) + "px";
+                menuPanelBlog.style.right = (window.innerWidth - btnRect.right) + "px";
+            }
         }
+        window.addEventListener("resize", updateBlogMenuPosition);
+        window.addEventListener("scroll", updateBlogMenuPosition);
     })();
     </script>
 
     <style>
         :root{--c0:#0d6efd;--c1:#e8f1ff;--c2:#0d6efd;--c3:#0d6efd;--c4:#0d6efd;--c5:#0d6efd;--c6:#0d6efd;--c7:#0d6efd;--c8:#0d6efd;--c9:#0d6efd;--c10:#0d6efd;--c11:#0d6efd;--bg:#fafafa;--dark:#222;--white:#fff;--card-radius:8px;--card-shadow:0 2px 8px rgba(0,0,0,0.06);}
         
-        .blog-header-main.floating-header-main{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;box-sizing:border-box;position:fixed;top:0;left:0;right:0;z-index:1001;}
+        .blog-header-main.floating-header-main{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#fff;box-sizing:border-box;position:fixed;top:0;left:0;right:0;z-index:1001;}
         .header-content-main{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1200px;margin:0 auto;gap:16px;}
         .domain-avatar-main{flex-shrink:0;line-height:0;}
-        .blog-title-main{margin:0;font-size:20px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700;}
+        .blog-title-main{margin:0;font-size:20px;color:#000;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700;}
         .nav-actions-main{flex-shrink:0;margin:0;}
-        .menu-btn-main{display:flex;align-items:center;justify-content:center;width:36px;height:36px;background:transparent;border:none;padding:0;cursor:pointer;}
+        .menu-btn-main{display:flex;align-items:center;justify-content:center;width:36px;height:36px;background:transparent;border:none;color:#000;padding:0;cursor:pointer;}
         .menu-btn-main:hover{opacity:0.6;}
-        .menu-icon-main{width:24px;height:24px;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+        .menu-icon-main{width:24px;height:24px;stroke:#000;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
         
-        #blogMenuPanel{visibility:hidden;opacity:0;transform:translateY(-8px);transition:all 0.2s ease;background:#fff;border:1px solid #e0e0e0;padding:16px;position:fixed;z-index:1000;box-shadow:0 4px 20px rgba(0,0,0,0.12);border-radius:10px;pointer-events:none;top:60px;right:16px;}
-        #blogMenuPanel.show{visibility:visible;opacity:1;transform:translateY(0);pointer-events:auto;}
+        #blogMenuPanel{display:none;background:#fff;border:1px solid #e0e0e0;padding:16px;position:fixed;z-index:1000;box-shadow:0 4px 20px rgba(0,0,0,0.12);border-radius:10px;}
         #blogMenuPanel ul{list-style:none;margin:0;padding:0;}
         #blogMenuPanel li{margin:0;padding:0;}
         #blogMenuPanel a{color:#000;text-decoration:none;display:block;border-radius:6px;padding:10px 14px;font-size:14px;transition:all 0.2s ease;font-weight:500;white-space:nowrap;}
@@ -413,29 +384,10 @@ layout: null
         .home-grid-title a{text-decoration:none;}
         .home-grid-desc{font-size:14px;line-height:1.7;margin:0;}
 
-        @media(min-width:1025px){
-            .blog-header-main.floating-header-main{padding:12px 24px;}.header-content-main{max-width:1400px;}.blog-title-main{font-size:22px;}.menu-btn-main{width:40px;height:40px;}.menu-icon-main{width:26px;height:26px;}.header-spacer{height:70px;}
-        }
-        @media(max-width:1024px) and (min-width:769px){
-            .latest-grid.grid-3{grid-template-columns:repeat(2,1fr);}.popular-list.grid-4{grid-template-columns:repeat(2,1fr);}
-            .country-links.grid-6{grid-template-columns:repeat(4,1fr);}.country-links.grid-4{grid-template-columns:repeat(3,1fr);}.country-links.grid-3{grid-template-columns:repeat(2,1fr);}.country-links.masonry{columns:2;}
-            .home-featured-grid{grid-template-columns:repeat(2,1fr);}.home-featured-title{font-size:28px;}.header-spacer{height:58px;}
-        }
-        @media(max-width:768px){
-            .latest-grid.grid-3,.latest-grid.grid-2{grid-template-columns:1fr;}.popular-list.grid-2,.popular-list.grid-4{grid-template-columns:1fr;}
-            .latest-grid.list-row .latest-card{flex-direction:column;}.latest-grid.list-row .latest-img{width:100%;}
-            .country-links.grid-6{grid-template-columns:repeat(3,1fr);}.country-links.grid-4{grid-template-columns:repeat(2,1fr);}.country-links.grid-3{grid-template-columns:repeat(2,1fr);}.country-links.list-2{grid-template-columns:1fr;}.country-links.masonry{columns:2;}
-            #homeFeaturedWrap{margin-top:20px;}.home-featured-main{border-radius:16px;margin-bottom:24px;}.home-featured-content{padding:18px;}
-            .home-featured-title{font-size:22px;}.home-featured-desc{font-size:14px;}
-            .home-featured-grid{grid-template-columns:repeat(2,1fr);gap:14px;}.home-grid-card{border-radius:14px;}.home-grid-content{padding:12px;}
-            .home-grid-title{font-size:14px;}.home-grid-desc{font-size:12px;}
-            .homepage-container{padding:1rem;}.header-spacer{height:52px;}
-        }
-        @media(max-width:480px){
-            .popular-item{flex-direction:column;align-items:flex-start;gap:0.5rem;}
-            .popular-img{width:100%;min-width:100%;max-width:100%;aspect-ratio:16/9;}
-            .country-links.grid-6{grid-template-columns:repeat(2,1fr);}.country-links.masonry{columns:1;}.header-spacer{height:48px;}
-        }
+        @media(min-width:1025px){.blog-header-main.floating-header-main{padding:12px 24px;}.header-content-main{max-width:1400px;}.blog-title-main{font-size:22px;}.menu-btn-main{width:40px;height:40px;}.menu-icon-main{width:26px;height:26px;}#blogMenuPanel{top:65px;right:24px;padding:20px;min-width:220px;max-width:250px;}#blogMenuPanel a{padding:12px 16px;font-size:15px;margin-bottom:4px;}.header-spacer{height:70px;}}
+        @media(max-width:1024px) and (min-width:769px){.latest-grid.grid-3{grid-template-columns:repeat(2,1fr);}.popular-list.grid-4{grid-template-columns:repeat(2,1fr);}.country-links.grid-6{grid-template-columns:repeat(4,1fr);}.country-links.grid-4{grid-template-columns:repeat(3,1fr);}.country-links.grid-3{grid-template-columns:repeat(2,1fr);}.country-links.masonry{columns:2;}.home-featured-grid{grid-template-columns:repeat(2,1fr);}.home-featured-title{font-size:28px;}.header-spacer{height:58px;}}
+        @media(max-width:768px){.latest-grid.grid-3,.latest-grid.grid-2{grid-template-columns:1fr;}.popular-list.grid-2,.popular-list.grid-4{grid-template-columns:1fr;}.latest-grid.list-row .latest-card{flex-direction:column;}.latest-grid.list-row .latest-img{width:100%;}.country-links.grid-6{grid-template-columns:repeat(3,1fr);}.country-links.grid-4{grid-template-columns:repeat(2,1fr);}.country-links.grid-3{grid-template-columns:repeat(2,1fr);}.country-links.list-2{grid-template-columns:1fr;}.country-links.masonry{columns:2;}#homeFeaturedWrap{margin-top:20px;}.home-featured-main{border-radius:16px;margin-bottom:24px;}.home-featured-content{padding:18px;}.home-featured-title{font-size:22px;}.home-featured-desc{font-size:14px;}.home-featured-grid{grid-template-columns:repeat(2,1fr);gap:14px;}.home-grid-card{border-radius:14px;}.home-grid-content{padding:12px;}.home-grid-title{font-size:14px;}.home-grid-desc{font-size:12px;}.homepage-container{padding:1rem;}.header-spacer{height:52px;}}
+        @media(max-width:480px){.popular-item{flex-direction:column;align-items:flex-start;gap:0.5rem;}.popular-img{width:100%;min-width:100%;max-width:100%;aspect-ratio:16/9;}.country-links.grid-6{grid-template-columns:repeat(2,1fr);}.country-links.masonry{columns:1;}.header-spacer{height:48px;}}
     </style>
 
     <div class="header-spacer"></div>
@@ -443,7 +395,6 @@ layout: null
 
         <p id="welcomePara" class="section-order">Welcome to my travel blog.</p>
 
-        <!-- LATEST POSTS -->
         {% assign latest_posts = site.categories.pisah01a | limit: 15 %}
         {% if latest_posts.size > 0 %}
         <div class="latest-section section-order">
@@ -451,14 +402,11 @@ layout: null
             <div class="latest-grid">
                 {% for post in latest_posts %}
                 <div class="latest-card">
-                    {% if post.image %}
-                    <div class="latest-img"><img src="{{ post.image }}" alt="{{ post.title }}" loading="lazy"></div>
-                    {% endif %}
+                    {% if post.image %}<div class="latest-img"><img src="{{ post.image }}" alt="{{ post.title }}" loading="lazy"></div>{% endif %}
                     <div class="latest-body">
                         <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
                         <div class="latest-meta">{{ post.date | date: "%b %d, %Y" }}</div>
-                        {% assign before_svg = post.content | split: '<p>' | first %}
-                        <div class="excerpt spo">{{ before_svg }}</div>
+                        {% assign before_svg = post.content | split: '<p>' | first %}<div class="excerpt spo">{{ before_svg }}</div>
                     </div>
                 </div>
                 {% endfor %}
@@ -466,7 +414,6 @@ layout: null
         </div>
         {% endif %}
 
-        <!-- POPULAR POSTS -->
         {% assign popular_posts = site.categories.pisah01b | limit: 15 %}
         {% if popular_posts.size > 0 %}
         <div class="popular-section section-order">
@@ -474,14 +421,11 @@ layout: null
             <div class="popular-list" id="popularList">
                 {% for post in popular_posts %}
                 <div class="popular-item">
-                    {% if post.image %}
-                    <div class="popular-img"><img src="{{ post.image }}" alt="{{ post.title }}" loading="lazy"></div>
-                    {% endif %}
+                    {% if post.image %}<div class="popular-img"><img src="{{ post.image }}" alt="{{ post.title }}" loading="lazy"></div>{% endif %}
                     <div class="popular-content">
                         <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
                         <p>{{ post.description }}</p>
-                        {% assign before_svg = post.content | split: '<p>' | first %}
-                        <div class="excerpt spo">{{ before_svg }}</div>
+                        {% assign before_svg = post.content | split: '<p>' | first %}<div class="excerpt spo">{{ before_svg }}</div>
                     </div>
                 </div>
                 {% endfor %}
@@ -489,53 +433,38 @@ layout: null
         </div>
         {% endif %}
 
-        <!-- MUST READ -->
         <div id="homeFeaturedWrap" class="section-order">
             <h2>Must Read</h2>
             {% assign main_post = site.categories.pisah01 | first %}
             {% if main_post %}
             <div class="home-featured-main">
-                <a href="{{ main_post.url }}">
-                    {% if main_post.image %}
-                    <div class="home-featured-thumb"><img src="{{ main_post.image | relative_url }}" alt="{{ main_post.title }}" loading="lazy"></div>
-                    {% endif %}
-                </a>
+                <a href="{{ main_post.url }}">{% if main_post.image %}<div class="home-featured-thumb"><img src="{{ main_post.image | relative_url }}" alt="{{ main_post.title }}" loading="lazy"></div>{% endif %}</a>
                 <div class="home-featured-content">
                     <h2 class="home-featured-title"><a href="{{ main_post.url }}">{{ main_post.title }}</a></h2>
                     {% if main_post.description %}<p class="home-featured-desc">{{ main_post.description }}</p>{% endif %}
-                    {% assign before_svg = main_post.content | split: '<p>' | first %}
-                    <div class="excerpt spo">{{ before_svg }}</div>
+                    {% assign before_svg = main_post.content | split: '<p>' | first %}<div class="excerpt spo">{{ before_svg }}</div>
                 </div>
             </div>
             {% endif %}
             <div class="home-featured-grid">
                 {% for post in site.categories.pisah01 limit:4 offset:1 %}
                 <div class="home-grid-card">
-                    {% if post.image %}
-                    <div class="home-grid-thumb"><a href="{{ post.url }}"><img src="{{ post.image | relative_url }}" alt="{{ post.title }}" loading="lazy"></a></div>
-                    {% endif %}
+                    {% if post.image %}<div class="home-grid-thumb"><a href="{{ post.url }}"><img src="{{ post.image | relative_url }}" alt="{{ post.title }}" loading="lazy"></a></div>{% endif %}
                     <div class="home-grid-content">
                         <h3 class="home-grid-title"><a href="{{ post.url }}">{{ post.title }}</a></h3>
                         {% if post.description %}<p class="home-grid-desc">{{ post.description }}</p>{% endif %}
-                        {% assign before_svg = post.content | split: '<p>' | first %}
-                        <div class="excerpt spo">{{ before_svg }}</div>
+                        {% assign before_svg = post.content | split: '<p>' | first %}<div class="excerpt spo">{{ before_svg }}</div>
                     </div>
                 </div>
                 {% endfor %}
             </div>
         </div>
 
-        <!-- EXPLORE BY COUNTRY -->
         <div class="section-order">
-            <div class="country-toggle" id="countryToggle" onclick="this.classList.toggle('open'); document.getElementById('countryWrap').classList.toggle('open');">
-                <span class="toggle-arrow">&#9654;</span>
-                <span class="section-title-country-text">Explore by Country</span>
+            <div class="country-toggle" id="countryToggle" onclick="this.classList.toggle('open');document.getElementById('countryWrap').classList.toggle('open');">
+                <span class="toggle-arrow">&#9654;</span><span class="section-title-country-text">Explore by Country</span>
             </div>
-            <div class="country-links-wrap" id="countryWrap">
-                <div class="country-links">
-                    {% include /link/country/list.html %}
-                </div>
-            </div>
+            <div class="country-links-wrap" id="countryWrap"><div class="country-links">{% include /link/country/list.html %}</div></div>
         </div>
 
         <p id="footerPara" class="section-order">Discover the beauty of the world.</p>
