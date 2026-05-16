@@ -1,7 +1,6 @@
 ---
 layout: null
 ---
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,8 +22,6 @@ layout: null
             color:#e0e0e0;
             line-height:1.5;
         }
-        
-        /* Header */
         .header{
             display:flex;align-items:center;justify-content:space-between;
             padding:10px 16px;background:#111;box-shadow:0 1px 4px rgba(0,0,0,.5);
@@ -40,8 +37,6 @@ layout: null
         }
         .header-btn:active{background:rgba(255,255,255,.05)}
         .header-btn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round}
-        
-        /* Menu */
         .menu{
             display:none;position:fixed;z-index:99;background:#1a1a1a;
             border:1px solid #333;padding:12px;border-radius:8px;
@@ -49,15 +44,11 @@ layout: null
         }
         .menu a{display:block;padding:8px 12px;color:#ccc;text-decoration:none;border-radius:4px;font-size:13px;font-weight:500}
         .menu a:active{background:rgba(255,255,255,.05)}
-        
-        /* Back button */
         .back-link{
             display:inline-flex;align-items:center;gap:4px;color:#e94560;
             text-decoration:none;font-size:13px;font-weight:500;margin-bottom:16px
         }
         .back-link svg{width:16px;height:16px}
-        
-        /* Search */
         .search-wrap{display:flex;gap:8px;margin-bottom:6px}
         .search-input{
             flex:1;padding:10px 14px;border:1px solid #333;border-radius:8px;
@@ -71,14 +62,10 @@ layout: null
         }
         .search-btn:active{background:#c0392b}
         .search-hint{font-size:11px;color:#666;margin-bottom:16px}
-        
-        /* Breadcrumb */
         .breadcrumb{margin-bottom:12px;font-size:12px;color:#666}
         .breadcrumb a{color:#888;text-decoration:none}
         .breadcrumb a:hover{color:#e94560}
         .breadcrumb span{color:#e0e0e0;font-weight:600}
-        
-        /* Filter & Info */
         .filter-bar{
             display:flex;align-items:center;gap:8px;padding:8px 12px;
             background:#1a1a1a;border-radius:8px;margin-bottom:12px;font-size:12px;color:#888
@@ -88,22 +75,14 @@ layout: null
             padding:8px 12px;background:#2a1a1a;border:1px solid #e94560;
             border-radius:8px;margin-bottom:12px;font-size:12px;color:#e0a0a0
         }
-        
-        /* Headings */
         h1{font-size:20px;margin-bottom:4px;color:#fff}
         .desc{font-size:12px;color:#888;margin-bottom:16px}
-        
-        /* ============================================ */
-        /* GRID LAYOUT - Fokus Gambar */
-        /* ============================================ */
         .post-grid{
             display:grid;
             grid-template-columns:repeat(2,1fr);
             gap:8px;
         }
-        @media(min-width:500px){
-            .post-grid{grid-template-columns:repeat(3,1fr)}
-        }
+        @media(min-width:500px){.post-grid{grid-template-columns:repeat(3,1fr)}}
         @media(min-width:768px){
             body{max-width:900px;padding-left:12px;padding-right:12px}
             .post-grid{grid-template-columns:repeat(3,1fr);gap:10px}
@@ -112,7 +91,6 @@ layout: null
             body{max-width:1100px}
             .post-grid{grid-template-columns:repeat(4,1fr);gap:12px}
         }
-        
         .post-card{
             background:#111;border-radius:8px;overflow:hidden;
             box-shadow:0 2px 8px rgba(0,0,0,.3);transition:transform 0.2s,box-shadow 0.2s;
@@ -132,8 +110,7 @@ layout: null
             display:inline-block;background:#1a1a1a;padding:1px 6px;
             border-radius:8px;font-size:9px;color:#999;text-decoration:none;margin-top:4px
         }
-        
-        /* Single Post View */
+        .post-card-label:hover{background:#333;color:#fff}
         .single-post-view{
             background:#111;padding:16px;border-radius:8px;
             box-shadow:0 2px 8px rgba(0,0,0,.3)
@@ -152,14 +129,11 @@ layout: null
             max-width:100%;height:auto;border-radius:6px;margin:8px 0;display:block
         }
         .single-post-view .post-body a{color:#e94560;text-decoration:underline}
-        
         .post-label-link{
             display:inline-block;background:#1a1a1a;padding:2px 8px;
             border-radius:10px;font-size:10px;color:#999;text-decoration:none
         }
         .post-label-link:hover{background:#333;color:#fff}
-        
-        /* Related Posts */
         .related-section{margin-top:20px}
         .related-section h3{font-size:15px;margin-bottom:10px;color:#fff}
         .related-grid{
@@ -178,8 +152,6 @@ layout: null
             font-size:10px;font-weight:600;color:#ccc;padding:6px 8px;
             display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden
         }
-        
-        /* Pagination */
         .pagination{display:flex;justify-content:center;gap:6px;margin-top:20px}
         .pagination a,.pagination span{
             display:inline-flex;align-items:center;justify-content:center;
@@ -190,14 +162,9 @@ layout: null
         .pagination a:active{background:#333}
         .pagination .current{background:#e94560;color:#fff;font-weight:700}
         .pagination .disabled{opacity:.3;pointer-events:none;background:#111}
-        
-        /* States */
         .loading,.error,.empty{text-align:center;padding:40px 20px;color:#888;font-size:14px}
         .error{color:#e94560}
-        
         footer{margin-top:32px;padding-top:16px;border-top:1px solid #222;text-align:center;font-size:11px;color:#666}
-        
-        /* Count bar */
         .count-bar{font-size:11px;color:#666;margin-bottom:12px}
     </style>
     {% include head.html %}
@@ -205,7 +172,6 @@ layout: null
 </head>
 <body>
 
-    <!-- HEADER -->
     <header class="header">
         <div class="header-brand">
             <svg class="header-svg" viewBox="0 0 100 100" aria-hidden="true">
@@ -220,7 +186,6 @@ layout: null
         </button>
     </header>
 
-    <!-- MENU -->
     <nav class="menu" id="menuPanel">
         <a href="/">Home</a>
         <a href="/contact/">Contact</a>
@@ -228,23 +193,19 @@ layout: null
         <a href="/terms-and-conditions/">Terms &amp; Conditions</a>
     </nav>
 
-    <!-- BACK BUTTON -->
     <a class="back-link" id="backLink" style="display:none" href="/">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         Back
     </a>
 
-    <!-- BREADCRUMB -->
     <div class="breadcrumb" id="breadcrumb"><a href="/">Home</a></div>
 
-    <!-- SEARCH -->
     <form class="search-wrap" id="searchForm" action="/" method="get">
-        <input class="search-input" type="search" name="label" id="searchInput" placeholder="Search name..." aria-label="Search">
+        <input class="search-input" type="search" name="label" id="searchInput" placeholder="Search name + leaked..." aria-label="Search">
         <button class="search-btn" type="submit">Search</button>
     </form>
-    <p class="search-hint" id="searchHint">Try: name + leaked</p>
+    <p class="search-hint" id="searchHint">Try: name leaked, viral, terbaru</p>
 
-    <!-- MAIN -->
     <h1 id="pageHeading">Loading...</h1>
     <p class="desc" id="siteDesc"></p>
     <div class="filter-bar" id="filterBar" style="display:none"></div>
@@ -257,7 +218,6 @@ layout: null
     (function(){
         const $ = id => document.getElementById(id);
         
-        // Domain info
         const host = location.hostname;
         const parts = host.split('.');
         let displayName = parts[0];
@@ -268,7 +228,6 @@ layout: null
         $('brandSvgText').textContent = letters;
         $('blogTitle').textContent = displayName;
         
-        // Menu toggle
         const menu = $('menuPanel');
         const iconM = $('iconMenu');
         const iconC = $('iconClose');
@@ -294,140 +253,129 @@ layout: null
             }
         };
         
-        // URL params
+        // ============================================
+        // ⚙️ KONFIGURASI ⚙️
+        // ============================================
+        const BLOG_ID = '3878198361264397837';
+        const MAX_POSTS_PER_PAGE = 24;
+        const DEFAULT_LABEL = '';
+        // ============================================
+        
         const p = new URLSearchParams(location.search);
-        const LABEL = p.get('label')||'';
         const POST_SLUG = p.get('p')||'';
-        const MAX = parseInt(p.get('max-results'))||24;
         const START = parseInt(p.get('start-index'))||1;
-        const BID = p.get('blogid')||'3849070220815751744';
+        const MAX = parseInt(p.get('max-results'))||MAX_POSTS_PER_PAGE;
+        const BID = p.get('blogid')||BLOG_ID;
+        const LABEL = p.get('label')||DEFAULT_LABEL;
         
         $('canonicalUrl').href = location.href;
         
-        // Helpers
         function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
         function hd(u){return u&&u.includes('googleusercontent.com')?u.replace(/\/s\d+(-c)?\//,'/s1600/'):u}
         function strip(h){if(!h)return'';const d=document.createElement('div');d.innerHTML=h;return(d.textContent||'').replace(/\s+/g,' ').trim()}
         function fd(d){try{return new Date(d).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}catch(e){return d}}
+        function altText(title,categories){const p=[title];if(categories&&categories.length)p.push(categories.join(', '));return p.filter(Boolean).join(' - ')}
         
-        const base = host.includes('blogspot.com')?
-            'https://'+host+'/feeds/posts/default':
-            'https://www.blogger.com/feeds/'+BID+'/posts/default';
+        const base = host.includes('blogspot.com')?'https://'+host+'/feeds/posts/default':'https://www.blogger.com/feeds/'+BID+'/posts/default';
         
         // ============================================
-        // SINGLE POST MODE
+        // SINGLE POST MODE - Search via Blogger API
         // ============================================
         if(POST_SLUG){
-            $('searchForm').style.display = 'none';
-            $('searchHint').style.display = 'none';
-            $('backLink').style.display = 'inline-flex';
-            if(document.referrer && document.referrer.includes(host)){
-                $('backLink').href = document.referrer;
-            }
-            $('pagination').style.display = 'none';
+            $('searchForm').style.display='none';
+            $('searchHint').style.display='none';
+            $('backLink').style.display='inline-flex';
+            if(document.referrer&&document.referrer.includes(host))$('backLink').href=document.referrer;
+            $('pagination').style.display='none';
             
-            const feedUrl = base+'?alt=json-in-script&callback=sp&max-results=50';
+            const searchQuery=POST_SLUG.replace(/-/g,' ');
+            const feedUrl=base+'?alt=json-in-script&callback=sp&max-results=1&q='+encodeURIComponent(searchQuery);
             
-            window.sp = function(data){
-                const feed = data.feed;
-                const container = $('mainContent');
+            window.sp=function(data){
+                const feed=data.feed;
+                const container=$('mainContent');
                 
                 if(!feed||!feed.entry){
-                    container.innerHTML = '<p class="error">Post not found.</p>';
+                    container.innerHTML='<p class="error">Post not found. <a href="/" style="color:#e94560">Back to home</a></p>';
                     return;
                 }
                 
-                const entries = Array.isArray(feed.entry)?feed.entry:[feed.entry];
-                const post = entries.find(e=>{
-                    const link = (e.link||[]).find(l=>l.rel==='alternate')?.href||'';
-                    const slug = link.split('/').pop().replace('.html','');
-                    return slug === POST_SLUG;
-                });
+                const post=Array.isArray(feed.entry)?feed.entry[0]:feed.entry;
+                const title=post.title?.$t||'Untitled';
+                const date=fd(post.published?.$t);
+                const content=post.content?.$t||post.summary?.$t||'';
+                const cats=(post.category||[]).map(c=>c.term).filter(Boolean);
+                const author=post.author?.[0]?.name?.$t||'';
+                const imgAlt=altText(title,cats);
                 
-                if(!post){
-                    container.innerHTML = '<p class="error">Post not found. <a href="/" style="color:#e94560">Back to home</a></p>';
-                    return;
-                }
+                let seoTitle=title;
+                const leakedTerms=['leaked','leak','viral','terbaru','exclusive','hot','terkini'];
+                if(!leakedTerms.some(t=>title.toLowerCase().includes(t)))seoTitle=title+' Leaked Photos';
                 
-                const title = post.title?.$t||'Untitled';
-                const date = fd(post.published?.$t);
-                const content = post.content?.$t||post.summary?.$t||'';
-                const cats = (post.category||[]).map(c=>c.term).filter(Boolean);
-                const author = post.author?.[0]?.name?.$t||'';
+                document.title=seoTitle+' — '+displayName;
+                $('pageHeading').textContent=title;
+                $('siteDesc').textContent='View latest leaked photos of '+title+' on '+displayName+'.';
                 
-                // SEO: title = nama artis + leaked keywords
-                let seoTitle = title;
-                const leakedTerms = ['leaked','leak','viral','terbaru','exclusive','hot'];
-                const hasLeakedTerm = leakedTerms.some(t=>title.toLowerCase().includes(t));
-                if(!hasLeakedTerm && cats.some(c=>leakedTerms.some(t=>c.toLowerCase().includes(t)))){
-                    seoTitle = title + ' Leaked Photos';
-                }
+                const md=document.createElement('meta');md.name='description';
+                md.content='View latest leaked photos, viral content, and exclusive updates of '+title+' on '+displayName+'.';
+                document.head.appendChild(md);
                 
-                document.title = seoTitle + ' — ' + displayName;
-                $('pageHeading').textContent = title;
-                $('siteDesc').textContent = 'View photos of ' + title + ' on ' + displayName + '.';
+                let breadHtml='<a href="/">Home</a>';
+                if(cats.length)breadHtml+=' &rsaquo; '+cats.slice(0,3).map(c=>'<a href="/?label='+encodeURIComponent(c)+'">'+esc(c)+'</a>').join(', ');
+                breadHtml+=' &rsaquo; <span>'+esc(title)+'</span>';
+                $('breadcrumb').innerHTML=breadHtml;
                 
-                const md = document.querySelector('meta[name="description"]')||document.createElement('meta');
-                md.name = 'description';
-                md.content = 'View latest photos and updates of ' + title + ' on ' + displayName + '.';
-                if(!md.parentNode) document.head.appendChild(md);
+                let html='<article class="single-post-view">';
+                html+='<h1 class="post-title">'+esc(title)+'</h1>';
+                html+='<div class="post-meta">';
+                if(author)html+='<span>'+esc(author)+'</span>';
+                if(date)html+='<time datetime="'+(post.published?.$t||'')+'">'+date+'</time>';
+                if(cats.length)html+=cats.map(c=>'<a href="/?label='+encodeURIComponent(c)+'" class="post-label-link">'+esc(c)+'</a>').join('');
+                html+='</div>';
                 
-                // Breadcrumb
-                let breadHtml = '<a href="/">Home</a>';
-                if(cats.length){
-                    breadHtml += ' &rsaquo; ' + cats.slice(0,3).map(c=>
-                        '<a href="/?label='+encodeURIComponent(c)+'">'+esc(c)+'</a>'
-                    ).join(', ');
-                }
-                breadHtml += ' &rsaquo; <span>'+esc(title)+'</span>';
-                $('breadcrumb').innerHTML = breadHtml;
+                let fc=content;
+                fc=fc.replace(/<img([^>]*)alt="([^"]*)"([^>]*)>/gi,(m,b,a,af)=>'<img'+b+'alt="'+esc(imgAlt)+'"'+af+'>');
+                fc=fc.replace(/<img((?:(?!alt=)[^>])*)>/gi,(m,a)=>'<img'+a+' alt="'+esc(imgAlt)+'">');
+                html+='<div class="post-body">'+fc+'</div></article>';
                 
-                // Render
-                let html = '<article class="single-post-view">';
-                html += '<h1 class="post-title">'+esc(title)+'</h1>';
-                html += '<div class="post-meta">';
-                if(author) html += '<span>'+esc(author)+'</span>';
-                if(date) html += '<time datetime="'+(post.published?.$t||'')+'">'+date+'</time>';
-                if(cats.length) html += cats.map(c=>
-                    '<a href="/?label='+encodeURIComponent(c)+'" class="post-label-link">#'+esc(c)+'</a>'
-                ).join('');
-                html += '</div>';
-                html += '<div class="post-body">'+content+'</div>';
-                html += '</article>';
+                container.innerHTML=html;
+                $('pagination').innerHTML='';
                 
                 // Related posts
-                const relatedPosts = allEntries.filter(e=>{
-                    const link = (e.link||[]).find(l=>l.rel==='alternate')?.href||'';
-                    const slug = link.split('/').pop().replace('.html','');
-                    if(slug === POST_SLUG) return false;
-                    const eCats = (e.category||[]).map(c=>c.term.toLowerCase());
-                    return cats.some(c=>eCats.includes(c.toLowerCase()));
-                }).slice(0,4);
-                
-                if(relatedPosts.length){
-                    html += '<div class="related-section"><h3>More Photos</h3><div class="related-grid">';
-                    relatedPosts.forEach(e=>{
-                        const t = e.title?.$t||'Untitled';
-                        const link = (e.link||[]).find(l=>l.rel==='alternate')?.href||'#';
-                        const slug = link.split('/').pop().replace('.html','');
-                        const thumb = hd(e.media$thumbnail?.url);
-                        const relUrl = '/?p='+slug+(BID!=='3849070220815751744'?'&blogid='+BID:'');
+                if(cats.length){
+                    const relUrl=base+'?alt=json-in-script&callback=rp&max-results=5&category='+encodeURIComponent(cats[0]);
+                    window.rp=function(rd){
+                        const rf=rd.feed;
+                        if(!rf||!rf.entry)return;
+                        const re=Array.isArray(rf.entry)?rf.entry:[rf.entry];
+                        const related=re.filter(e=>{
+                            const l=(e.link||[]).find(x=>x.rel==='alternate')?.href||'';
+                            return l.split('/').pop().replace('.html','')!==POST_SLUG;
+                        }).slice(0,4);
                         
-                        html += '<a href="'+relUrl+'" class="related-card">';
-                        if(thumb) html += '<img class="related-card-img" src="'+thumb+'" alt="'+esc(t)+'" loading="lazy" onerror="this.style.display=\'none\'">';
-                        html += '<span class="related-card-title">'+esc(t)+'</span></a>';
-                    });
-                    html += '</div></div>';
+                        if(related.length){
+                            let rh='<div class="related-section"><h3>More Leaked Photos</h3><div class="related-grid">';
+                            related.forEach(e=>{
+                                const t=e.title?.$t||'Untitled';
+                                const l=(e.link||[]).find(x=>x.rel==='alternate')?.href||'#';
+                                const slug=l.split('/').pop().replace('.html','');
+                                const thumb=hd(e.media$thumbnail?.url);
+                                const ru='/?p='+slug+(BID!==BLOG_ID?'&blogid='+BID:'');
+                                const ec=(e.category||[]).map(c=>c.term).filter(Boolean);
+                                rh+='<a href="'+ru+'" class="related-card">';
+                                if(thumb)rh+='<img class="related-card-img" src="'+thumb+'" alt="'+esc(altText(t,ec))+'" loading="lazy" onerror="this.style.display=\'none\'">';
+                                rh+='<span class="related-card-title">'+esc(t)+'</span></a>';
+                            });
+                            rh+='</div></div>';
+                            container.innerHTML+=rh;
+                        }
+                    };
+                    const rs=document.createElement('script');rs.src=relUrl;rs.async=true;document.head.appendChild(rs);
                 }
-                
-                container.innerHTML = html;
-                $('pagination').innerHTML = '';
             };
             
-            const s = document.createElement('script');
-            s.src = feedUrl;
-            s.async = true;
-            s.onerror = ()=>$('mainContent').innerHTML='<p class="error">Failed to load.</p>';
+            const s=document.createElement('script');s.src=feedUrl;s.async=true;
+            s.onerror=()=>$('mainContent').innerHTML='<p class="error">Failed to load.</p>';
             document.head.appendChild(s);
             return;
         }
@@ -436,194 +384,72 @@ layout: null
         // GRID/LIST MODE
         // ============================================
         
-        const si = $('searchInput');
-        if(si && LABEL) si.value = LABEL;
+        const si=$('searchInput');
+        if(si&&LABEL)si.value=LABEL;
+        if(LABEL)$('searchHint').textContent='Showing results for: '+LABEL;
+        else $('searchHint').textContent='Try: name leaked, viral, terbaru, exclusive';
         
-        // Search hint
         if(LABEL){
-            $('searchHint').textContent = 'Showing results for: ' + LABEL;
-        } else {
-            $('searchHint').textContent = 'Try: name leaked, viral, terbaru';
-        }
-        
-        // SEO Title & Description
-        if(LABEL){
-            const isLeakedQuery = /leak|viral|terbaru|exclusive|hot/i.test(LABEL);
-            let pageTitle, pageDesc;
-            
-            if(isLeakedQuery){
-                pageTitle = LABEL + ' Photos — ' + displayName;
-                pageDesc = 'View ' + LABEL + ' photos and updates on ' + displayName + '. Latest collection.';
-            } else {
-                pageTitle = LABEL + ' Leaked Photos & Updates — ' + displayName;
-                pageDesc = 'View latest ' + LABEL + ' leaked photos, viral content, and updates on ' + displayName + '.';
-            }
-            
-            document.title = pageTitle;
-            $('pageHeading').textContent = LABEL;
-            $('siteDesc').textContent = pageDesc;
-            
-            const md = document.createElement('meta');
-            md.name = 'description';
-            md.content = pageDesc;
-            document.head.appendChild(md);
-            
-            $('filterBar').style.display = 'flex';
-            $('filterBar').innerHTML = 'Category: <strong>'+esc(LABEL)+'</strong> <a href="/">Clear</a>';
-            $('breadcrumb').innerHTML = '<a href="/">Home</a> &rsaquo; <span>'+esc(LABEL)+'</span>';
-        } else {
-            document.title = displayName + ' — Photo Collection';
-            $('pageHeading').textContent = displayName;
-            $('siteDesc').textContent = 'Latest photo collection and updates.';
-            
-            const md = document.createElement('meta');
-            md.name = 'description';
-            md.content = 'Latest photo collection, viral content, and updates on ' + displayName + '.';
-            document.head.appendChild(md);
+            const isLeaked=/leak|viral|terbaru|exclusive|hot|terkini/i.test(LABEL);
+            let pt,pd;
+            if(isLeaked){pt=LABEL+' — '+displayName;pd='View '+LABEL+' leaked photos, viral content, and exclusive updates on '+displayName+'.';}
+            else{pt=LABEL+' Leaked Photos & Viral Updates — '+displayName;pd='View latest '+LABEL+' leaked photos, viral content, and exclusive updates on '+displayName+'. Browse the full collection.';}
+            document.title=pt;$('pageHeading').textContent=LABEL;$('siteDesc').textContent=pd;
+            const md=document.createElement('meta');md.name='description';md.content=pd;document.head.appendChild(md);
+            $('filterBar').style.display='flex';$('filterBar').innerHTML='Category: <strong>'+esc(LABEL)+'</strong> <a href="/">Clear</a>';
+            $('breadcrumb').innerHTML='<a href="/">Home</a> &rsaquo; <span>'+esc(LABEL)+'</span>';
+        }else{
+            document.title=displayName+' — Leaked Photos & Viral Collection';
+            $('pageHeading').textContent=displayName;$('siteDesc').textContent='Latest leaked photos, viral content, and exclusive updates. Browse the full collection.';
+            const md=document.createElement('meta');md.name='description';md.content='Latest leaked photos, viral content, and exclusive updates on '+displayName+'. New photos added regularly.';document.head.appendChild(md);
         }
         
         function il(u){
             if(!u)return'#';
-            try{
-                const ur=new URL(u);
-                const slug = ur.pathname.split('/').pop().replace('.html','');
-                const pp = new URLSearchParams();
-                if(BID!=='3849070220815751744') pp.set('blogid',BID);
-                pp.set('p',slug);
-                return '/?'+pp.toString();
-            }catch(e){}
+            try{const ur=new URL(u);const slug=ur.pathname.split('/').pop().replace('.html','');const pp=new URLSearchParams();if(BID!==BLOG_ID)pp.set('blogid',BID);pp.set('p',slug);return'/?'+pp.toString();}catch(e){}
             return u;
         }
         
-        function buildUrl(useLabel){
-            const fp = new URLSearchParams();
-            fp.set('alt','json-in-script');
-            fp.set('callback','hp');
-            fp.set('max-results',MAX);
-            fp.set('start-index',START);
-            if(useLabel) fp.set('category',useLabel);
-            return base+'?'+fp.toString();
-        }
+        function buildUrl(ul){const fp=new URLSearchParams();fp.set('alt','json-in-script');fp.set('callback','hp');fp.set('max-results',MAX);fp.set('start-index',START);if(ul)fp.set('category',ul);return base+'?'+fp.toString();}
         
-        let feedUrl = buildUrl(LABEL);
-        let labelMatched = false;
+        let feedUrl=buildUrl(LABEL),labelMatched=false;
         
-        window.hp = function(data){
-            const feed = data.feed;
-            const container = $('mainContent');
-            
-            if(LABEL && !labelMatched && (!feed||!feed.entry)){
-                labelMatched = true;
-                feedUrl = buildUrl('');
-                const s = document.createElement('script');
-                s.src = feedUrl;
-                s.async = true;
-                document.head.appendChild(s);
-                return;
+        window.hp=function(data){
+            const feed=data.feed,container=$('mainContent');
+            if(LABEL&&!labelMatched&&(!feed||!feed.entry)){labelMatched=true;feedUrl=buildUrl('');const s=document.createElement('script');s.src=feedUrl;s.async=true;document.head.appendChild(s);return;}
+            if(!feed||!feed.entry){container.innerHTML='<p class="empty">No posts found.</p>';return;}
+            if(LABEL&&!labelMatched&&feed.entry){
+                const entries=Array.isArray(feed.entry)?feed.entry:[feed.entry];
+                const has=entries.some(e=>{const cats=(e.category||[]).map(c=>c.term.toLowerCase());return cats.some(c=>c.includes(LABEL.toLowerCase())||LABEL.toLowerCase().includes(c));});
+                if(!has){labelMatched=true;const ib=document.createElement('div');ib.className='info-msg';ib.innerHTML='No results for "<strong>'+esc(LABEL)+'</strong>". Showing latest leaked photos instead.';container.parentNode.insertBefore(ib,container);$('filterBar').style.display='none';$('breadcrumb').innerHTML='<a href="/">Home</a> &rsaquo; <span>'+esc(LABEL)+'</span>';}
             }
-            
-            if(!feed||!feed.entry){
-                container.innerHTML = '<p class="empty">No posts found.</p>';
-                return;
-            }
-            
-            if(LABEL && !labelMatched && feed.entry){
-                const entries = Array.isArray(feed.entry)?feed.entry:[feed.entry];
-                const hasMatchingLabel = entries.some(e=>{
-                    const cats = (e.category||[]).map(c=>c.term.toLowerCase());
-                    return cats.some(c=>c.includes(LABEL.toLowerCase()) || LABEL.toLowerCase().includes(c));
-                });
-                
-                if(!hasMatchingLabel){
-                    labelMatched = true;
-                    
-                    const infoBar = document.createElement('div');
-                    infoBar.className = 'info-msg';
-                    infoBar.innerHTML = 'No results for "<strong>'+esc(LABEL)+'</strong>". Showing latest posts instead.';
-                    container.parentNode.insertBefore(infoBar, container);
-                    
-                    $('filterBar').style.display = 'none';
-                    $('breadcrumb').innerHTML = '<a href="/">Home</a> &rsaquo; <span>'+esc(LABEL)+'</span>';
-                }
-            }
-            
-            const entries = Array.isArray(feed.entry)?feed.entry:[feed.entry];
-            const total = parseInt(feed.openSearch$totalResults?.$t)||entries.length;
-            
-            let html = '<p class="count-bar">Showing '+
-                START+'-'+(START+entries.length-1)+' of '+total+' posts</p>';
-            
-            // GRID LAYOUT
-            html += '<div class="post-grid">';
-            
+            const entries=Array.isArray(feed.entry)?feed.entry:[feed.entry],total=parseInt(feed.openSearch$totalResults?.$t)||entries.length;
+            let html='<p class="count-bar">Showing '+START+'-'+(START+entries.length-1)+' of '+total+' leaked photos</p><div class="post-grid">';
             for(let i=0;i<entries.length;i++){
-                const e = entries[i];
-                const t = e.title?.$t||'Untitled';
-                const link = il((e.link||[]).find(l=>l.rel==='alternate')?.href||'#');
-                const date = fd(e.published?.$t);
-                const content = e.content?.$t||e.summary?.$t||'';
-                const thumb = hd(e.media$thumbnail?.url)||(function(c){
-                    if(!c)return null;const d=document.createElement('div');d.innerHTML=c;
-                    const i=d.querySelector('img');return i?hd(i.src):null;
-                })(content);
-                const cats = (e.category||[]).map(c=>c.term).filter(Boolean);
-                
-                html += '<a href="'+link+'" class="post-card">';
-                if(thumb){
-                    html += '<img class="post-card-img" src="'+thumb+'" alt="'+esc(t)+'" loading="lazy" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 300%22><rect fill=%22%23111%22 width=%22200%22 height=%22300%22/><text fill=%22%23666%22 x=%22100%22 y=%22150%22 text-anchor=%22middle%22 font-size=%2214%22>No Image</text></svg>\'">';
-                } else {
-                    html += '<div style="aspect-ratio:2/3;background:#1a1a1a;display:flex;align-items:center;justify-content:center;color:#555;font-size:12px">No Image</div>';
-                }
-                html += '<div class="post-card-info">';
-                html += '<span class="post-card-title">'+esc(t)+'</span>';
-                if(date) html += '<div class="post-card-meta">'+date+'</div>';
-                if(cats.length) html += cats.slice(0,2).map(c=>
-                    '<span class="post-card-label">#'+esc(c)+'</span>'
-                ).join('');
-                html += '</div></a>';
+                const e=entries[i],t=e.title?.$t||'Untitled',link=il((e.link||[]).find(l=>l.rel==='alternate')?.href||'#'),date=fd(e.published?.$t),content=e.content?.$t||e.summary?.$t||'';
+                const thumb=hd(e.media$thumbnail?.url)||(function(c){if(!c)return null;const d=document.createElement('div');d.innerHTML=c;const i=d.querySelector('img');return i?hd(i.src):null;})(content);
+                const cats=(e.category||[]).map(c=>c.term).filter(Boolean),imgAlt=altText(t,cats);
+                html+='<a href="'+link+'" class="post-card">';
+                if(thumb)html+='<img class="post-card-img" src="'+thumb+'" alt="'+esc(imgAlt)+'" loading="lazy" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 300%22><rect fill=%22%23111%22 width=%22200%22 height=%22300%22/><text fill=%22%23666%22 x=%22100%22 y=%22150%22 text-anchor=%22middle%22 font-size=%2214%22>No Image</text></svg>\'">';
+                else html+='<div style="aspect-ratio:2/3;background:#1a1a1a;display:flex;align-items:center;justify-content:center;color:#555;font-size:12px">No Image</div>';
+                html+='<div class="post-card-info"><span class="post-card-title">'+esc(t)+'</span>';
+                if(date)html+='<div class="post-card-meta">'+date+'</div>';
+                if(cats.length)html+=cats.slice(0,2).map(c=>'<span class="post-card-label">'+esc(c)+'</span>').join('');
+                html+='</div></a>';
             }
-            
-            html += '</div>';
-            container.innerHTML = html;
-            
-            // Pagination
-            const pages = Math.ceil(total/MAX);
-            const cur = Math.floor((START-1)/MAX)+1;
-            const pg = $('pagination');
-            
+            html+='</div>';container.innerHTML=html;
+            const pages=Math.ceil(total/MAX),cur=Math.floor((START-1)/MAX)+1,pg=$('pagination');
             if(pages<2){pg.innerHTML='';return}
-            
-            function bu(page){
-                const pp=new URLSearchParams();
-                if(BID!=='3849070220815751744')pp.set('blogid',BID);
-                if(LABEL && !labelMatched)pp.set('label',LABEL);
-                if(MAX!==24)pp.set('max-results',MAX);
-                if(page>1)pp.set('start-index',(page-1)*MAX+1);
-                const q=pp.toString();return q?'/?'+q:'/';
-            }
-            
-            let ph = '';
-            if(cur>1) ph += '<a href="'+bu(cur-1)+'">&lsaquo;</a>';
-            else ph += '<span class="disabled">&lsaquo;</span>';
-            
-            const sp = Math.max(1,cur-2);
-            const ep = Math.min(pages,cur+2);
-            for(let i=sp;i<=ep;i++){
-                if(i===cur) ph += '<span class="current">'+i+'</span>';
-                else ph += '<a href="'+bu(i)+'">'+i+'</a>';
-            }
-            
-            if(cur<pages) ph += '<a href="'+bu(cur+1)+'">&rsaquo;</a>';
-            else ph += '<span class="disabled">&rsaquo;</span>';
-            
-            pg.innerHTML = ph;
+            function bu(page){const pp=new URLSearchParams();if(BID!==BLOG_ID)pp.set('blogid',BID);if(LABEL&&!labelMatched)pp.set('label',LABEL);if(MAX!==MAX_POSTS_PER_PAGE)pp.set('max-results',MAX);if(page>1)pp.set('start-index',(page-1)*MAX+1);const q=pp.toString();return q?'/?'+q:'/';}
+            let ph='';
+            if(cur>1)ph+='<a href="'+bu(cur-1)+'">&lsaquo;</a>';else ph+='<span class="disabled">&lsaquo;</span>';
+            const sp=Math.max(1,cur-2),ep=Math.min(pages,cur+2);
+            for(let i=sp;i<=ep;i++){if(i===cur)ph+='<span class="current">'+i+'</span>';else ph+='<a href="'+bu(i)+'">'+i+'</a>';}
+            if(cur<pages)ph+='<a href="'+bu(cur+1)+'">&rsaquo;</a>';else ph+='<span class="disabled">&rsaquo;</span>';
+            pg.innerHTML=ph;
         };
         
-        const s = document.createElement('script');
-        s.src = feedUrl;
-        s.async = true;
-        s.onerror = ()=>$('mainContent').innerHTML='<p class="error">Failed to load.</p>';
-        document.head.appendChild(s);
+        const s=document.createElement('script');s.src=feedUrl;s.async=true;s.onerror=()=>$('mainContent').innerHTML='<p class="error">Failed to load.</p>';document.head.appendChild(s);
     })();
     </script>
 </body>
