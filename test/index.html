@@ -13,15 +13,7 @@ layout: null
     <link rel="canonical" id="canonicalUrl" href="">
     <style>
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        body{
-            font-family:system-ui,-apple-system,sans-serif;
-            max-width:100%;
-            margin:0 auto;
-            padding:70px 8px 20px;
-            background:#0a0a0a;
-            color:#e0e0e0;
-            line-height:1.5;
-        }
+        body{font-family:system-ui,-apple-system,sans-serif;max-width:100%;margin:0 auto;padding:70px 8px 20px;background:#0a0a0a;color:#e0e0e0;line-height:1.5}
         .header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:#111;box-shadow:0 1px 4px rgba(0,0,0,.5);position:fixed;top:0;left:0;right:0;z-index:100;border-bottom:1px solid #222}
         .header-brand{display:flex;align-items:center;gap:10px;min-width:0}
         .header-svg{width:32px;height:32px;flex-shrink:0}
@@ -73,64 +65,21 @@ layout: null
         footer{margin-top:32px;padding-top:16px;border-top:1px solid #222;text-align:center;font-size:11px;color:#666}
         .count-bar{font-size:11px;color:#666;margin-bottom:12px}
 
-        /* ============================================ */
-        /* LIGHTBOX GALLERY */
-        /* ============================================ */
-        .lightbox{
-            display:none;position:fixed;top:0;left:0;right:0;bottom:0;
-            background:rgba(0,0,0,0.95);z-index:9999;touch-action:pan-x;
-            animation:lbFadeIn 0.2s ease;
-        }
+        /* LIGHTBOX */
+        .lightbox{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:9999;touch-action:pan-x;animation:lbFadeIn 0.2s ease}
         .lightbox.active{display:flex;align-items:center;justify-content:center}
         @keyframes lbFadeIn{from{opacity:0}to{opacity:1}}
-        
-        .lightbox-close{
-            position:absolute;top:16px;right:16px;z-index:10;
-            width:40px;height:40px;background:rgba(255,255,255,0.1);
-            border:none;border-radius:50%;cursor:pointer;display:flex;
-            align-items:center;justify-content:center;color:#fff;font-size:24px
-        }
+        .lightbox-close{position:absolute;top:16px;right:16px;z-index:10;width:40px;height:40px;background:rgba(255,255,255,0.1);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px}
         .lightbox-close:active{background:rgba(255,255,255,0.2)}
-        
-        .lightbox-counter{
-            position:absolute;top:16px;left:16px;z-index:10;
-            color:#fff;font-size:13px;background:rgba(0,0,0,0.5);
-            padding:6px 12px;border-radius:16px
-        }
-        
-        .lightbox-track{
-            display:flex;align-items:center;transition:transform 0.3s ease;
-            height:100%;width:100%;touch-action:pan-x
-        }
-        
-        .lightbox-slide{
-            min-width:100%;height:100%;display:flex;
-            align-items:center;justify-content:center;padding:60px 16px
-        }
-        
-        .lightbox-slide img{
-            max-width:100%;max-height:85vh;object-fit:contain;
-            border-radius:4px;user-select:none;-webkit-user-select:none
-        }
-        
-        .lightbox-prev,.lightbox-next{
-            position:absolute;top:50%;transform:translateY(-50%);z-index:10;
-            width:44px;height:44px;background:rgba(255,255,255,0.1);
-            border:none;border-radius:50%;cursor:pointer;display:flex;
-            align-items:center;justify-content:center;color:#fff;font-size:20px
-        }
-        .lightbox-prev{left:8px}
-        .lightbox-next{right:8px}
+        .lightbox-counter{position:absolute;top:16px;left:16px;z-index:10;color:#fff;font-size:13px;background:rgba(0,0,0,0.5);padding:6px 12px;border-radius:16px}
+        .lightbox-track{display:flex;align-items:center;transition:transform 0.3s ease;height:100%;width:100%;touch-action:pan-x}
+        .lightbox-slide{min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:60px 16px}
+        .lightbox-slide img{max-width:100%;max-height:85vh;object-fit:contain;border-radius:4px;user-select:none;-webkit-user-select:none}
+        .lightbox-prev,.lightbox-next{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:44px;height:44px;background:rgba(255,255,255,0.1);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px}
+        .lightbox-prev{left:8px}.lightbox-next{right:8px}
         .lightbox-prev:active,.lightbox-next:active{background:rgba(255,255,255,0.2)}
-        
-        .lightbox-caption{
-            position:absolute;bottom:16px;left:16px;right:16px;text-align:center;
-            color:#ccc;font-size:12px;background:rgba(0,0,0,0.6);
-            padding:8px 12px;border-radius:8px;line-height:1.3
-        }
-
-        /* Cursor pointer untuk gambar */
-        .post-card-img, .post-body img, .related-card-img{cursor:pointer}
+        .lightbox-caption{position:absolute;bottom:16px;left:16px;right:16px;text-align:center;color:#ccc;font-size:12px;background:rgba(0,0,0,0.6);padding:8px 12px;border-radius:8px;line-height:1.3}
+        .post-card-img,.post-body img,.related-card-img{cursor:pointer}
     </style>
     {% include head.html %}
     {% include verif.html %}
@@ -211,16 +160,47 @@ layout: null
         };
         document.onclick=function(e){if(mo&&!menu.contains(e.target)){mo=false;menu.style.display='none';im.style.display='';ic.style.display='none';}};
         
+        // ============================================
         // ⚙️ KONFIGURASI ⚙️
-        const BLOG_ID='3878198361264397837';
-        const MAX_POSTS_PER_PAGE=24;
-        const DEFAULT_LABEL='';
+        // ============================================
+        const ALL_BLOG_IDS = [
+            '3849070220815751744',
+            '3744972648234868485',
+            '3878198361264397837',
+        ];
+        const MAX_POSTS_PER_PAGE = 24;
+        const DEFAULT_LABEL = '';
+        
+        // Shuffle array pakai seed (konsisten per domain)
+        function seededShuffle(arr, seed){
+            const a = [...arr];
+            let s = seed;
+            for(let i = a.length - 1; i > 0; i--){
+                s = (s * 16807 + 0) % 2147483647;
+                const j = s % (i + 1);
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+        
+        // Hash domain jadi seed
+        function hashDomain(h){
+            let hash = 0;
+            for(let i = 0; i < h.length; i++){
+                hash = ((hash << 5) - hash) + h.charCodeAt(i);
+                hash = hash & hash;
+            }
+            return Math.abs(hash);
+        }
+        
+        const seed = hashDomain(host);
+        const BLOG_IDS = seededShuffle(ALL_BLOG_IDS, seed);
+        // ============================================
         
         const p=new URLSearchParams(location.search);
         const POST_SLUG=p.get('p')||'';
         const START=parseInt(p.get('start-index'))||1;
         const MAX=parseInt(p.get('max-results'))||MAX_POSTS_PER_PAGE;
-        const BID=p.get('blogid')||BLOG_ID;
         const LABEL=p.get('label')||DEFAULT_LABEL;
         $('canonicalUrl').href=location.href;
         
@@ -229,10 +209,14 @@ layout: null
         function fd(d){try{return new Date(d).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}catch(e){return d}}
         function altText(t,c){const p=[t];if(c&&c.length)p.push(c.join(', '));return p.filter(Boolean).join(' - ')}
         
-        const base=host.includes('blogspot.com')?'https://'+host+'/feeds/posts/default':'https://www.blogger.com/feeds/'+BID+'/posts/default';
+        function il(u, bid){
+            if(!u)return'#';
+            try{const ur=new URL(u);const slug=ur.pathname.split('/').pop().replace('.html','');const pp=new URLSearchParams();pp.set('p',slug);return'/?'+pp.toString();}catch(e){}
+            return u;
+        }
         
         // ============================================
-        // LIGHTBOX GALLERY
+        // LIGHTBOX
         // ============================================
         let lbImages=[],lbIndex=0;
         const lb=$('lightbox'),lbTrack=$('lbTrack'),lbCounter=$('lbCounter'),lbCaption=$('lbCaption');
@@ -261,21 +245,14 @@ layout: null
             lbCaption.textContent=lbImages[lbIndex]?.alt||'';
         }
         
-        function nextImage(){
-            if(lbIndex<lbImages.length-1){lbIndex++;renderLightbox();}
-        }
-        
-        function prevImage(){
-            if(lbIndex>0){lbIndex--;renderLightbox();}
-        }
+        function nextImage(){if(lbIndex<lbImages.length-1){lbIndex++;renderLightbox();}}
+        function prevImage(){if(lbIndex>0){lbIndex--;renderLightbox();}}
         
         $('lbClose').onclick=closeLightbox;
         $('lbNext').onclick=nextImage;
         $('lbPrev').onclick=prevImage;
-        
         lb.onclick=function(e){if(e.target===lb)closeLightbox();};
         
-        // Keyboard navigation
         document.onkeydown=function(e){
             if(!lb.classList.contains('active'))return;
             if(e.key==='Escape')closeLightbox();
@@ -283,37 +260,70 @@ layout: null
             if(e.key==='ArrowLeft')prevImage();
         };
         
-        // Touch swipe
-        let touchStartX=0,touchEndX=0;
+        let touchStartX=0;
         lb.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;});
         lb.addEventListener('touchend',e=>{
-            touchEndX=e.changedTouches[0].clientX;
-            const diff=touchStartX-touchEndX;
-            if(Math.abs(diff)>50){
-                if(diff>0)nextImage();
-                else prevImage();
-            }
+            const diff=touchStartX-e.changedTouches[0].clientX;
+            if(Math.abs(diff)>50){if(diff>0)nextImage();else prevImage();}
         });
         
-        // Attach lightbox ke gambar di halaman
         function attachLightbox(){
-            const allImages=document.querySelectorAll('.post-card-img, .post-body img, .related-card-img');
+            const allImages=document.querySelectorAll('.post-card-img');
             const images=[];
             allImages.forEach(img=>{
                 if(img.src&&!img.src.includes('data:image/svg+xml')){
                     images.push({src:img.src,alt:img.alt||'Photo'});
                     img.style.cursor='pointer';
                     const idx=images.length-1;
-                    img.onclick=function(e){
-                        e.preventDefault();
-                        openLightbox(images,idx);
-                    };
+                    img.onclick=function(e){e.preventDefault();openLightbox(images,idx);};
                 }
             });
         }
         
         // ============================================
-        // POST SLUG MODE - 10 Random Posts
+        // MULTI BLOG FETCH
+        // ============================================
+        function fetchAllBlogs(callback, useLabel, pageStart, pageMax, useSlug){
+            const allPosts = [];
+            let completed = 0;
+            const totalBlogs = BLOG_IDS.length;
+            
+            BLOG_IDS.forEach((bid, idx) => {
+                const base = 'https://www.blogger.com/feeds/'+bid+'/posts/default';
+                const fp = new URLSearchParams();
+                fp.set('alt','json-in-script');
+                fp.set('callback','mb'+idx);
+                fp.set('max-results', useSlug ? 3 : pageMax);
+                fp.set('start-index', pageStart);
+                if(useLabel) fp.set('category', useLabel);
+                
+                window['mb'+idx] = function(data){
+                    const feed = data.feed;
+                    if(feed && feed.entry){
+                        const entries = Array.isArray(feed.entry) ? feed.entry : [feed.entry];
+                        entries.forEach(e => {
+                            e._blogId = bid;
+                            e._blogIndex = idx;
+                        });
+                        allPosts.push(...entries);
+                    }
+                    completed++;
+                    if(completed >= totalBlogs){
+                        // Acak hasil pakai seed domain
+                        const shuffled = seededShuffle(allPosts, seed + pageStart);
+                        callback(shuffled, allPosts.length);
+                    }
+                };
+                
+                const s = document.createElement('script');
+                s.src = base + '?' + fp.toString();
+                s.async = true;
+                document.head.appendChild(s);
+            });
+        }
+        
+        // ============================================
+        // POST SLUG MODE
         // ============================================
         if(POST_SLUG){
             $('backLink').style.display='inline-flex';
@@ -331,25 +341,19 @@ layout: null
             const md=document.createElement('meta');md.name='description';md.content=seoDesc;document.head.appendChild(md);
             $('breadcrumb').innerHTML='<a href="/">Home</a> &rsaquo; <span>'+pageId+'</span>';
             
-            const rs=Math.floor(Math.random()*100)+1;
-            const fu=base+'?alt=json-in-script&callback=rp&max-results=10&start-index='+rs;
-            
-            window.rp=function(data){
-                const feed=data.feed,container=$('mainContent');
-                if(!feed||!feed.entry){container.innerHTML='<p class="empty">No posts found.</p>';return;}
-                const entries=Array.isArray(feed.entry)?feed.entry:[feed.entry];
-                const shuffled=entries.sort(()=>Math.random()-0.5);
+            const rs=Math.floor(Math.random()*20)+1;
+            fetchAllBlogs(function(posts, total){
+                const container=$('mainContent');
+                if(!posts.length){container.innerHTML='<p class="empty">No posts found.</p>';return;}
                 
-                let html='<p class="count-bar">Showing 10 random leaked photos</p><div class="post-grid">';
-                for(let i=0;i<shuffled.length;i++){
-                    const e=shuffled[i],t=e.title?.$t||'Untitled';
-                    const link=(function(u){
-                        if(!u)return'#';
-                        try{const ur=new URL(u);const slug=ur.pathname.split('/').pop().replace('.html','');const pp=new URLSearchParams();if(BID!==BLOG_ID)pp.set('blogid',BID);pp.set('p',slug);return'/?'+pp.toString();}catch(e){}
-                        return u;
-                    })((e.link||[]).find(l=>l.rel==='alternate')?.href||'#');
-                    const date=fd(e.published?.$t),content=e.content?.$t||e.summary?.$t||'';
-                    const thumb=hd(e.media$thumbnail?.url)||(function(c){if(!c)return null;const d=document.createElement('div');d.innerHTML=c;const i=d.querySelector('img');return i?hd(i.src):null;})(content);
+                const display=posts.slice(0,10);
+                let html='<p class="count-bar">Showing 10 random leaked photos from '+BLOG_IDS.length+' sources</p><div class="post-grid">';
+                
+                for(let i=0;i<display.length;i++){
+                    const e=display[i],t=e.title?.$t||'Untitled';
+                    const link=il((e.link||[]).find(l=>l.rel==='alternate')?.href||'#', e._blogId);
+                    const date=fd(e.published?.$t);
+                    const thumb=hd(e.media$thumbnail?.url)||(function(c){if(!c)return null;const d=document.createElement('div');d.innerHTML=c;const i=d.querySelector('img');return i?hd(i.src):null;})(e.content?.$t||e.summary?.$t||'');
                     const cats=(e.category||[]).map(c=>c.term).filter(Boolean),imgAlt=altText(t,cats);
                     html+='<a href="'+link+'" class="post-card">';
                     if(thumb)html+='<img class="post-card-img" src="'+thumb+'" alt="'+imgAlt+'" loading="lazy" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 300%22><rect fill=%22%23111%22 width=%22200%22 height=%22300%22/><text fill=%22%23666%22 x=%22100%22 y=%22150%22 text-anchor=%22middle%22 font-size=%2214%22>No Image</text></svg>\'">';
@@ -361,14 +365,12 @@ layout: null
                 }
                 html+='</div>';container.innerHTML=html;
                 attachLightbox();
-            };
-            
-            const s=document.createElement('script');s.src=fu;s.async=true;s.onerror=()=>$('mainContent').innerHTML='<p class="error">Failed to load.</p>';document.head.appendChild(s);
+            }, '', rs, 5, true);
             return;
         }
         
         // ============================================
-        // GRID
+        // GRID MODE
         // ============================================
         const si=$('searchInput');if(si&&LABEL)si.value=LABEL;
         if(LABEL)$('searchHint').textContent='Showing results for: '+LABEL;
@@ -389,29 +391,20 @@ layout: null
             const md=document.createElement('meta');md.name='description';md.content='Latest leaked photos, viral content, and exclusive updates on '+dn+'. New photos added regularly.';document.head.appendChild(md);
         }
         
-        function il(u){
-            if(!u)return'#';
-            try{const ur=new URL(u);const slug=ur.pathname.split('/').pop().replace('.html','');const pp=new URLSearchParams();if(BID!==BLOG_ID)pp.set('blogid',BID);pp.set('p',slug);return'/?'+pp.toString();}catch(e){}
-            return u;
-        }
-        
-        function buildUrl(ul){const fp=new URLSearchParams();fp.set('alt','json-in-script');fp.set('callback','hp');fp.set('max-results',MAX);fp.set('start-index',START);if(ul)fp.set('category',ul);return base+'?'+fp.toString();}
-        let feedUrl=buildUrl(LABEL),lm=false;
-        
-        window.hp=function(data){
-            const feed=data.feed,container=$('mainContent');
-            if(LABEL&&!lm&&(!feed||!feed.entry)){lm=true;feedUrl=buildUrl('');const s=document.createElement('script');s.src=feedUrl;s.async=true;document.head.appendChild(s);return;}
-            if(!feed||!feed.entry){container.innerHTML='<p class="empty">No posts found.</p>';return;}
-            if(LABEL&&!lm&&feed.entry){
-                const entries=Array.isArray(feed.entry)?feed.entry:[feed.entry];
-                const has=entries.some(e=>{const cats=(e.category||[]).map(c=>c.term.toLowerCase());return cats.some(c=>c.includes(LABEL.toLowerCase())||LABEL.toLowerCase().includes(c));});
-                if(!has){lm=true;const ib=document.createElement('div');ib.className='info-msg';ib.innerHTML='No results for "<strong>'+LABEL+'</strong>". Showing latest leaked photos instead.';container.parentNode.insertBefore(ib,container);$('filterBar').style.display='none';$('breadcrumb').innerHTML='<a href="/">Home</a> &rsaquo; <span>'+LABEL+'</span>';}
-            }
-            const entries=Array.isArray(feed.entry)?feed.entry:[feed.entry],total=parseInt(feed.openSearch$totalResults?.$t)||entries.length;
-            let html='<p class="count-bar">Showing '+START+'-'+(START+entries.length-1)+' of '+total+' leaked photos</p><div class="post-grid">';
-            for(let i=0;i<entries.length;i++){
-                const e=entries[i],t=e.title?.$t||'Untitled',link=il((e.link||[]).find(l=>l.rel==='alternate')?.href||'#'),date=fd(e.published?.$t),content=e.content?.$t||e.summary?.$t||'';
-                const thumb=hd(e.media$thumbnail?.url)||(function(c){if(!c)return null;const d=document.createElement('div');d.innerHTML=c;const i=d.querySelector('img');return i?hd(i.src):null;})(content);
+        // Fetch dari semua blog
+        const perBlog = Math.ceil(MAX / BLOG_IDS.length);
+        fetchAllBlogs(function(posts, totalFromBlogs){
+            const container=$('mainContent');
+            if(!posts.length){container.innerHTML='<p class="empty">No posts found.</p>';return;}
+            
+            const display=posts.slice(0,MAX);
+            let html='<p class="count-bar">Showing '+Math.min(display.length,MAX)+' leaked photos from '+BLOG_IDS.length+' sources</p><div class="post-grid">';
+            
+            for(let i=0;i<display.length;i++){
+                const e=display[i],t=e.title?.$t||'Untitled';
+                const link=il((e.link||[]).find(l=>l.rel==='alternate')?.href||'#', e._blogId);
+                const date=fd(e.published?.$t);
+                const thumb=hd(e.media$thumbnail?.url)||(function(c){if(!c)return null;const d=document.createElement('div');d.innerHTML=c;const i=d.querySelector('img');return i?hd(i.src):null;})(e.content?.$t||e.summary?.$t||'');
                 const cats=(e.category||[]).map(c=>c.term).filter(Boolean),imgAlt=altText(t,cats);
                 html+='<a href="'+link+'" class="post-card">';
                 if(thumb)html+='<img class="post-card-img" src="'+thumb+'" alt="'+imgAlt+'" loading="lazy" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 300%22><rect fill=%22%23111%22 width=%22200%22 height=%22300%22/><text fill=%22%23666%22 x=%22100%22 y=%22150%22 text-anchor=%22middle%22 font-size=%2214%22>No Image</text></svg>\'">';
@@ -423,18 +416,8 @@ layout: null
             }
             html+='</div>';container.innerHTML=html;
             attachLightbox();
-            
-            const pages=Math.ceil(total/MAX),cur=Math.floor((START-1)/MAX)+1,pg=$('pagination');
-            if(pages<2){pg.innerHTML='';return}
-            function bu(page){const pp=new URLSearchParams();if(BID!==BLOG_ID)pp.set('blogid',BID);if(LABEL&&!lm)pp.set('label',LABEL);if(MAX!==MAX_POSTS_PER_PAGE)pp.set('max-results',MAX);if(page>1)pp.set('start-index',(page-1)*MAX+1);const q=pp.toString();return q?'/?'+q:'/';}
-            let ph='';if(cur>1)ph+='<a href="'+bu(cur-1)+'">&lsaquo;</a>';else ph+='<span class="disabled">&lsaquo;</span>';
-            const sp=Math.max(1,cur-2),ep=Math.min(pages,cur+2);
-            for(let i=sp;i<=ep;i++){if(i===cur)ph+='<span class="current">'+i+'</span>';else ph+='<a href="'+bu(i)+'">'+i+'</a>';}
-            if(cur<pages)ph+='<a href="'+bu(cur+1)+'">&rsaquo;</a>';else ph+='<span class="disabled">&rsaquo;</span>';
-            pg.innerHTML=ph;
-        };
-        
-        const s=document.createElement('script');s.src=feedUrl;s.async=true;s.onerror=()=>$('mainContent').innerHTML='<p class="error">Failed to load.</p>';document.head.appendChild(s);
+            $('pagination').innerHTML='';
+        }, LABEL, START, perBlog, false);
     })();
     </script>
 </body>
