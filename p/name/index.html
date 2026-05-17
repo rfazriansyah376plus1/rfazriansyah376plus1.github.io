@@ -15,6 +15,7 @@ permalink: /name/
     <link rel="canonical" id="canonicalUrl" href="">
     <link rel="alternate" type="application/atom+xml" title="RSS Feed" id="rssFeed" href="">
     <link rel="icon" type="image/svg+xml" id="favicon" href="">
+    <link rel="sitemap" type="application/xml" title="Sitemap" id="sitemapLink" href="">
     <style>
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
         body{font-family:system-ui,-apple-system,sans-serif;max-width:100%;margin:0 auto;padding:70px 8px 20px;background:#0a0a0a;color:#e0e0e0;line-height:1.5}
@@ -185,6 +186,7 @@ permalink: /name/
         var BASE_PATH = '/name/';
         var CACHE_EXPIRE = 30 * 60 * 1000;
         var SITEMAP_CACHE_EXPIRE = 24 * 60 * 60 * 1000;
+        $('sitemapLink').href=location.origin+BASE_PATH+'?sitemap=true';
         
         function hashDomain(h){var hash=0;for(var i=0;i<h.length;i++){hash=((hash<<5)-hash)+h.charCodeAt(i);hash=hash&hash;}return Math.abs(hash);}
         var seed=hashDomain(host);
@@ -228,14 +230,14 @@ permalink: /name/
         function renderCard(e){var t=e.title?.$t||'Untitled';var link=il((e.link||[]).find(function(l){return l.rel==='alternate';})?.href||'#');var content=e.content?.$t||e.summary?.$t||'';var thumb=hd(e.media$thumbnail?.url)||(function(c){if(!c)return null;var d=document.createElement('div');d.innerHTML=c;var i=d.querySelector('img');return i?hd(i.src):null;})(content);var cats=(e.category||[]).map(function(c){return c.term;}).filter(Boolean);var imgAlt=altText(t,cats);var imgAltSafe=imgAlt.replace(/"/g,'&quot;').replace(/'/g,'&#39;');var html='<article class="post-card">';if(thumb){html+='<img class="post-card-img" src="'+thumb+'" alt="'+imgAltSafe+'" title="'+imgAltSafe+'" data-alt="'+imgAltSafe+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">';html+='<div class="no-img">No Image</div>';}else{html+='<div class="no-img" style="display:flex">No Image</div>';}html+='<div class="post-card-info"><h2><a href="'+link+'">'+t+'</a></h2></div></article>';return html;}
         
         // BREADCRUMB
-        function buildBreadcrumb(allLabels){var html='<ul class="spo">';var uniqueLabels=[];for(var i=0;i<allLabels.length;i++){if(uniqueLabels.indexOf(allLabels[i])===-1)uniqueLabels.push(allLabels[i]);}for(var j=0;j<uniqueLabels.length;j++){var lbl=uniqueLabels[j];var link=labelLink(lbl);html+='<li><a href="'+link+'">'+lbl+'</a></li>';}html+='</ul>';$('breadcrumb').innerHTML=html;var schemaItems=[{'@type':'ListItem','position':1,'name':'Home','item':location.origin+BASE_PATH}];for(var k=0;k<uniqueLabels.length;k++){schemaItems.push({'@type':'ListItem','position':k+2,'name':uniqueLabels[k],'item':labelLink(uniqueLabels[k])});}$('breadcrumbSchema').textContent=JSON.stringify({'@context':'https://schema.org','@type':'BreadcrumbList','itemListElement':schemaItems},null,2);}
+        function buildBreadcrumb(allLabels){var html='<ul class="spo">';var uniqueLabels=[];for(var i=0;i<allLabels.length;i++){if(uniqueLabels.indexOf(allLabels[i])===-1)uniqueLabels.push(allLabels[i]);}for(var j=0;j<uniqueLabels.length;j++){var lbl=uniqueLabels[j];var link=labelLink(lbl);html+='<li><a href="'+link+'">'+lbl+'</a></li>';}html+='</ul>';$('breadcrumb').innerHTML=html;var schemaItems=[{'@type':'ListItem','position':1,'name':'Home','item':location.origin+BASE_PATH}];for(var k=0;k<uniqueLabels.length;k++){schemaItems.push({'@type':'ListItem','position':k+2,'name':uniqueLabels[k],'item':location.origin+labelLink(uniqueLabels[k])});}$('breadcrumbSchema').textContent=JSON.stringify({'@context':'https://schema.org','@type':'BreadcrumbList','itemListElement':schemaItems},null,2);}
         
         // SITEMAP MODE
         if(SITEMAP_MODE){
             var sitemapCache=getCache(getSitemapCacheKey());
             if(sitemapCache){document.head.innerHTML='';document.body.innerHTML='<pre>'+sitemapCache+'</pre>';return;}
             var sitemapUrl=base+'?alt=json-in-script&callback=sm&max-results='+MAX+'&start-index='+START;
-            window.sm=function(data){var feed=data.feed;var xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';if(feed&&feed.entry){var entries=Array.isArray(feed.entry)?feed.entry:[feed.entry];for(var i=0;i<entries.length;i++){var link=il((entries[i].link||[]).find(function(l){return l.rel==='alternate';})?.href||'#');xml+='  <url><loc>'+location.origin+link+'</loc></url>\n';}}xml+='  <url><loc>'+location.origin+BASE_PATH+'</loc></url>\n';xml+='</urlset>';setCache(getSitemapCacheKey(),xml);document.head.innerHTML='';document.body.innerHTML='<pre>'+xml+'</pre>';};
+            window.sm=function(data){var feed=data.feed;var xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';if(feed&&feed.entry){var entries=Array.isArray(feed.entry)?feed.entry:[feed.entry];var labels=[];for(var i=0;i<entries.length;i++){var cats=(entries[i].category||[]).map(function(c){return c.term;}).filter(Boolean);for(var j=0;j<cats.length;j++){if(labels.indexOf(cats[j])===-1)labels.push(cats[j]);}}for(var k=0;k<labels.length;k++){xml+='  <url><loc>'+location.origin+BASE_PATH+'?label='+labels[k]+'</loc></url>\n';}}xml+='</urlset>';setCache(getSitemapCacheKey(),xml);document.head.innerHTML='';document.body.innerHTML='<pre>'+xml+'</pre>';};
             var smScript=document.createElement('script');smScript.src=sitemapUrl;smScript.async=true;document.head.appendChild(smScript);return;
         }
         
@@ -288,8 +290,8 @@ permalink: /name/
                 container.innerHTML='<p class="empty">No posts found.</p>';return;}
             var display=posts.slice(0,MAX);var allLabels=[];for(var i=0;i<display.length;i++){var cats=(display[i].category||[]).map(function(c){return c.term;}).filter(Boolean);for(var j=0;j<cats.length;j++){allLabels.push(cats[j]);}}buildBreadcrumb(allLabels);
             var html='<p class="count-bar">Showing '+display.length+' leaked photos</p><div class="post-grid">';for(var k=0;k<display.length;k++){html+=renderCard(display[k]);}html+='</div>';container.innerHTML=html;attachLightbox();
-            var sitemapXml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';for(var m=0;m<display.length;m++){var link=il((display[m].link||[]).find(function(l){return l.rel==='alternate';})?.href||'#');sitemapXml+='  <url><loc>'+location.origin+link+'</loc></url>\n';}sitemapXml+='  <url><loc>'+location.origin+BASE_PATH+'</loc></url>\n';sitemapXml+='</urlset>';setCache(getSitemapCacheKey(),sitemapXml);
-            var structuredPosts=[];for(var n=0;n<display.length;n++){var e=display[n];var t=e.title?.$t||'Untitled';var link=il((e.link||[]).find(function(l){return l.rel==='alternate';})?.href||'#');var thumb=hd(e.media$thumbnail?.url)||'';var cats2=(e.category||[]).map(function(c){return c.term;}).filter(Boolean);structuredPosts.push({'@type':'ImageObject','name':t,'url':link,'thumbnailUrl':thumb,'caption':altText(t,cats2),'keywords':cats2.join(', ')});}
+            var sitemapXml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';var uniqueLabels=[];for(var m=0;m<display.length;m++){var cats2=(display[m].category||[]).map(function(c){return c.term;}).filter(Boolean);for(var n=0;n<cats2.length;n++){if(uniqueLabels.indexOf(cats2[n])===-1)uniqueLabels.push(cats2[n]);}}for(var o=0;o<uniqueLabels.length;o++){sitemapXml+='  <url><loc>'+location.origin+BASE_PATH+'?label='+uniqueLabels[o]+'</loc></url>\n';}sitemapXml+='</urlset>';setCache(getSitemapCacheKey(),sitemapXml);
+            var structuredPosts=[];for(var p=0;p<display.length;p++){var e=display[p];var t=e.title?.$t||'Untitled';var link=il((e.link||[]).find(function(l){return l.rel==='alternate';})?.href||'#');var thumb=hd(e.media$thumbnail?.url)||'';var cats3=(e.category||[]).map(function(c){return c.term;}).filter(Boolean);structuredPosts.push({'@type':'ImageObject','name':t,'url':link,'thumbnailUrl':thumb,'caption':altText(t,cats3),'keywords':cats3.join(', ')});}
             $('structuredData').textContent=JSON.stringify({'@context':'https://schema.org','@type':'CollectionPage','name':document.title,'description':$('siteDesc').textContent,'url':location.href,'mainEntity':{'@type':'ImageGallery','image':structuredPosts}},null,2);}
     })();
     </script>
