@@ -66,7 +66,7 @@ permalink: /name/
         .related-section{margin-top:20px}
         .related-section h3{font-size:15px;margin-bottom:10px;color:#fff}
         .related-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-        @media(min-width:500px){.related-grid{grid-template-columns:repeat(4,1fr)}}
+        @media(min-width:500px){.related-grid{grid-template-columns:repeat(5,1fr)}}
         .related-card{background:#1a1a1a;border-radius:6px;overflow:hidden;text-decoration:none;display:block;transition:transform 0.2s}
         .related-card:hover{transform:translateY(-2px)}
         .related-card-img{width:100%;height:auto;aspect-ratio:2/3;object-fit:cover;display:block}
@@ -180,17 +180,6 @@ permalink: /name/
         var DEFAULT_START_INDEX = 1;
         var DEFAULT_LABEL = '';
         var BASE_PATH = '/name/';
-        
-        function seededShuffle(arr,seed){
-            var a=arr.slice();
-            var s=seed;
-            for(var i=a.length-1;i>0;i--){
-                s=(s*16807+0)%2147483647;
-                var j=s%(i+1);
-                var tmp=a[i];a[i]=a[j];a[j]=tmp;
-            }
-            return a;
-        }
         
         function hashDomain(h){
             var hash=0;
@@ -352,7 +341,7 @@ permalink: /name/
         }
         
         // ============================================
-        // SINGLE POST MODE - FULL CONTENT + RELATED
+        // SINGLE POST MODE
         // ============================================
         if(POST_SLUG){
             $('searchForm').style.display='none';
@@ -411,9 +400,9 @@ permalink: /name/
                 
                 var breadHtml='<a href="'+BASE_PATH+'">Home</a>';
                 if(cats.length){
-                    breadHtml+=' &rsaquo; '+cats.slice(0,3).map(function(c){
+                    breadHtml+=' &rsaquo; <ul class="spo"><li>'+cats.slice(0,3).map(function(c){
                         return'<a href="'+labelLink(c)+'">'+c+'</a>';
-                    }).join(', ');
+                    }).join('</li><li>')+'</li></ul>';
                 }
                 breadHtml+=' &rsaquo; <span>'+title+'</span>';
                 $('breadcrumb').innerHTML=breadHtml;
@@ -423,9 +412,13 @@ permalink: /name/
                 html+='<div class="post-meta">';
                 if(author)html+='<span>'+author+'</span>';
                 if(date)html+='<time datetime="'+(post.published?.$t||'')+'">'+date+'</time>';
-                if(cats.length)html+=cats.map(function(c){
-                    return'<a href="'+labelLink(c)+'" class="post-label-link">'+c+'</a>';
-                }).join('');
+                if(cats.length){
+                    html+='<ul class="spo">';
+                    cats.forEach(function(c){
+                        html+='<li><a href="'+labelLink(c)+'" class="post-label-link">'+c+'</a></li>';
+                    });
+                    html+='</ul>';
+                }
                 html+='</div>';
                 
                 var fixedContent=content;
@@ -438,31 +431,29 @@ permalink: /name/
                 html+='<div class="post-body">'+fixedContent+'</div>';
                 html+='</article>';
                 
-                // Related posts
-                if(cats.length){
-                    var relatedPosts=entries.filter(function(e){
-                        var link=(e.link||[]).find(function(l){return l.rel==='alternate';})?.href||'';
-                        var slug=link.split('/').pop().replace('.html','');
-                        if(slug===POST_SLUG)return false;
-                        var eCats=(e.category||[]).map(function(c){return c.term;});
-                        return cats.some(function(c){return eCats.indexOf(c)!==-1;});
-                    }).slice(0,4);
-                    
-                    if(relatedPosts.length){
-                        html+='<div class="related-section"><h3>More Photos</h3><div class="related-grid">';
-                        relatedPosts.forEach(function(e){
-                            var t=e.title?.$t||'Untitled';
-                            var rlink=bloggerLink((e.link||[]).find(function(l){return l.rel==='alternate';})?.href||'#');
-                            var thumb=hd(e.media$thumbnail?.url);
-                            var eCats=(e.category||[]).map(function(c){return c.term;}).filter(Boolean);
-                            var rAlt=altText(t,eCats);
-                            
-                            html+='<a href="'+rlink+'" target="_blank" rel="noopener" class="related-card">';
-                            if(thumb)html+='<img class="related-card-img" src="'+thumb+'" alt="'+rAlt+'" loading="lazy" onerror="this.style.display=\'none\'">';
-                            html+='<span class="related-card-title">'+t+'</span></a>';
-                        });
-                        html+='</div></div>';
-                    }
+                // Related posts - 10 posts
+                var relatedPosts=entries.filter(function(e){
+                    var link=(e.link||[]).find(function(l){return l.rel==='alternate';})?.href||'';
+                    var slug=link.split('/').pop().replace('.html','');
+                    if(slug===POST_SLUG)return false;
+                    var eCats=(e.category||[]).map(function(c){return c.term;});
+                    return cats.some(function(c){return eCats.indexOf(c)!==-1;});
+                }).slice(0,10);
+                
+                if(relatedPosts.length){
+                    html+='<div class="related-section"><h3>More Photos</h3><div class="related-grid">';
+                    relatedPosts.forEach(function(e){
+                        var t=e.title?.$t||'Untitled';
+                        var rlink=bloggerLink((e.link||[]).find(function(l){return l.rel==='alternate';})?.href||'#');
+                        var thumb=hd(e.media$thumbnail?.url);
+                        var eCats=(e.category||[]).map(function(c){return c.term;}).filter(Boolean);
+                        var rAlt=altText(t,eCats);
+                        
+                        html+='<a href="'+rlink+'" target="_blank" rel="noopener" class="related-card">';
+                        if(thumb)html+='<img class="related-card-img" src="'+thumb+'" alt="'+rAlt+'" loading="lazy" onerror="this.style.display=\'none\'">';
+                        html+='<span class="related-card-title">'+t+'</span></a>';
+                    });
+                    html+='</div></div>';
                 }
                 
                 container.innerHTML=html;
