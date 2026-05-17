@@ -103,7 +103,7 @@ permalink: /name/
     {% include verif.html %}
 </head>
 <body>
-
+<div loading="lazy">
     <header class="header">
         <div class="header-brand">
             <svg class="header-svg" viewBox="0 0 100 100" aria-hidden="true">
@@ -175,15 +175,11 @@ permalink: /name/
         $('menuToggle').onclick=function(e){e.stopPropagation();mo=!mo;menu.style.display=mo?'block':'none';im.style.display=mo?'none':'';ic.style.display=mo?'':'none';if(mo){var r=this.getBoundingClientRect();menu.style.top=(r.bottom+4)+'px';menu.style.right=(innerWidth-r.right)+'px';}};
         document.onclick=function(e){if(mo&&!menu.contains(e.target)){mo=false;menu.style.display='none';im.style.display='';ic.style.display='none';}};
         
-        // FAVICON
-        (function(){var hue=0;for(var i=0;i<host.length;i++){hue=((hue<<5)-hue)+host.charCodeAt(i);hue=hue&hue;}hue=Math.abs(hue)%360;var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="hsl('+hue+',55%,50%)"/><text x="50" y="68" text-anchor="middle" fill="#fff" font-size="48" font-weight="700" font-family="system-ui">'+letters+'</text></svg>';$('favicon').href='data:image/svg+xml,'+encodeURIComponent(svg);})();
+        // FAVICON HD
+        (function(){var hue=0;for(var i=0;i<host.length;i++){hue=((hue<<5)-hue)+host.charCodeAt(i);hue=hue&hue;}hue=Math.abs(hue)%360;var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="80" fill="hsl('+hue+',60%,45%)"/><text x="256" y="340" text-anchor="middle" fill="#fff" font-size="280" font-weight="800" font-family="system-ui,-apple-system,sans-serif">'+letters+'</text></svg>';$('favicon').href='data:image/svg+xml,'+encodeURIComponent(svg);})();
         
         // CONFIG
-        var BLOG_ID='3849070220815751744',MAX_POSTS_PER_PAGE=24,
-DEFAULT_START_INDEX=100,
-DEFAULT_LABEL='',
-BASE_PATH='/name/',
-CACHE_EXPIRE=30*60*1000;
+        var BLOG_ID='3849070220815751744',MAX_POSTS_PER_PAGE=24,DEFAULT_START_INDEX=1,DEFAULT_LABEL='',BASE_PATH='/name/',CACHE_EXPIRE=30*60*1000;
         function hashDomain(h){var hash=0;for(var i=0;i<h.length;i++){hash=((hash<<5)-hash)+h.charCodeAt(i);hash=hash&hash;}return Math.abs(hash);}
         var seed=hashDomain(host);
         
@@ -220,9 +216,7 @@ CACHE_EXPIRE=30*60*1000;
         // BREADCRUMB
         function buildBreadcrumb(allLabels){var html='<ul class="spo">';var uniqueLabels=[];for(var i=0;i<allLabels.length;i++){if(uniqueLabels.indexOf(allLabels[i])===-1)uniqueLabels.push(allLabels[i]);}for(var j=0;j<uniqueLabels.length;j++){var lbl=uniqueLabels[j];var link=labelLink(lbl);html+='<li><a href="'+link+'">'+lbl+'</a></li>';}html+='</ul>';$('breadcrumb').innerHTML=html;var schemaItems=[{'@type':'ListItem','position':1,'name':'Home','item':location.origin+BASE_PATH}];for(var k=0;k<uniqueLabels.length;k++){schemaItems.push({'@type':'ListItem','position':k+2,'name':uniqueLabels[k],'item':location.origin+labelLink(uniqueLabels[k])});}$('breadcrumbSchema').textContent=JSON.stringify({'@context':'https://schema.org','@type':'BreadcrumbList','itemListElement':schemaItems},null,2);}
         
-        // ============================================
         // SINGLE POST MODE
-        // ============================================
         if(POST_SLUG){
             $('searchForm').style.display='none';$('searchHint').style.display='none';$('backLink').style.display='inline-flex';
             if(document.referrer&&document.referrer.includes(host))$('backLink').href=document.referrer;$('pagination').style.display='none';
@@ -256,7 +250,7 @@ CACHE_EXPIRE=30*60*1000;
                 
                 container.innerHTML=html;$('pagination').innerHTML='';setTimeout(function(){attachLightbox();},100);
                 
-                // RELATED POSTS - Fetch terpisah, filter by semua label (OR)
+                // RELATED POSTS
                 if(cats.length){
                     var relatedUrl=base+'?alt=json-in-script&callback=rp&max-results=50';
                     window.rp=function(rdata){var rfeed=rdata.feed;if(!rfeed||!rfeed.entry)return;var rentries=Array.isArray(rfeed.entry)?rfeed.entry:[rfeed.entry];
@@ -278,9 +272,7 @@ CACHE_EXPIRE=30*60*1000;
             var s=document.createElement('script');s.src=feedUrl;s.async=true;s.onerror=function(){$('mainContent').innerHTML='<p class="error">Failed to load.</p>';};document.head.appendChild(s);return;
         }
         
-        // ============================================
         // GRID MODE
-        // ============================================
         var si=$('searchInput');if(si&&LABEL)si.value=LABEL;
         if(LABEL)$('searchHint').textContent='Showing results for: '+LABEL;else $('searchHint').textContent='Try: name leaked, viral, latest, exclusive';
         
@@ -315,5 +307,8 @@ CACHE_EXPIRE=30*60*1000;
             $('structuredData').textContent=JSON.stringify({'@context':'https://schema.org','@type':'CollectionPage','name':document.title,'description':$('siteDesc').textContent,'url':location.href,'mainEntity':{'@type':'ImageGallery','image':structuredPosts}},null,2);}
     })();
     </script>
+    {% include /ads/gobloggugel/sosmed.html %}
+    </div>
+    
 </body>
 </html>
