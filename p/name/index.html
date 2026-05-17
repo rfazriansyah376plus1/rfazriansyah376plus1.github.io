@@ -179,7 +179,11 @@ permalink: /name/
         (function(){var hue=0;for(var i=0;i<host.length;i++){hue=((hue<<5)-hue)+host.charCodeAt(i);hue=hue&hue;}hue=Math.abs(hue)%360;var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="hsl('+hue+',55%,50%)"/><text x="50" y="68" text-anchor="middle" fill="#fff" font-size="48" font-weight="700" font-family="system-ui">'+letters+'</text></svg>';$('favicon').href='data:image/svg+xml,'+encodeURIComponent(svg);})();
         
         // CONFIG
-        var BLOG_ID='3878198361264397837',MAX_POSTS_PER_PAGE=24,DEFAULT_START_INDEX=1,DEFAULT_LABEL='',BASE_PATH='/name/',CACHE_EXPIRE=30*60*1000;
+        var BLOG_ID='3849070220815751744',MAX_POSTS_PER_PAGE=24,
+DEFAULT_START_INDEX=100,
+DEFAULT_LABEL='',
+BASE_PATH='/name/',
+CACHE_EXPIRE=30*60*1000;
         function hashDomain(h){var hash=0;for(var i=0;i<h.length;i++){hash=((hash<<5)-hash)+h.charCodeAt(i);hash=hash&hash;}return Math.abs(hash);}
         var seed=hashDomain(host);
         
