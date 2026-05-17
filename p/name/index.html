@@ -191,7 +191,6 @@ permalink: /name/
         function altText(t,c){var p=[t];if(c&&c.length)p.push(c.join(', '));return p.filter(Boolean).join(' - ');}
         function il(u){if(!u)return'#';try{var ur=new URL(u);var slug=ur.pathname.split('/').pop().replace('.html','');return BASE_PATH+'?p='+slug;}catch(e){}return u;}
         function labelLink(label){return BASE_PATH+'?label='+label;}
-        function bloggerLink(u){return u||'#';}
         var base='https://www.blogger.com/feeds/'+BLOG_ID+'/posts/default';
         
         // CACHE
@@ -238,45 +237,39 @@ permalink: /name/
                 document.title=seoTitle+' — '+dn;$('pageHeading').textContent=title;$('siteDesc').textContent='View latest leaked photos of '+title+' on '+dn+'.';
                 var md=document.createElement('meta');md.name='description';md.content='View latest leaked photos, viral content, and exclusive updates of '+title+' on '+dn+'.';document.head.appendChild(md);
                 
-                // Breadcrumb
                 var breadHtml='<a href="'+BASE_PATH+'">Home</a>';
                 if(cats.length){breadHtml+=' <span style="color:#666">&rsaquo;</span> ';cats.slice(0,3).forEach(function(c,i){breadHtml+='<a href="'+labelLink(c)+'">'+c+'</a>';if(i<cats.slice(0,3).length-1)breadHtml+=', ';});}
                 breadHtml+=' <span style="color:#666">&rsaquo;</span> <span>'+title+'</span>';$('breadcrumb').innerHTML=breadHtml;
                 
                 var html='<article class="single-post-view"><h1 class="post-title">'+title+'</h1>';
-                
-                // Label di meta post
                 if(cats.length){html+='<div class="single-post-labels">';cats.forEach(function(c){html+='<a href="'+labelLink(c)+'" class="single-post-label">'+c+'</a>';});html+='</div>';}
-                
-                // Deskripsi SEO
                 var snippet=content.replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim().substring(0,200);
                 html+='<p class="single-post-desc">View latest leaked photos and viral updates of <strong>'+title+'</strong> on '+dn+'. '+(snippet?(' — '+snippet+'...'):'')+'</p>';
-                
                 html+='<div class="post-meta">';if(author)html+='<span>'+author+'</span>';if(date)html+='<time datetime="'+(post.published?.$t||'')+'">'+date+'</time>';html+='</div>';
                 
                 var fixedContent=content;fixedContent=fixedContent.replace(/<img([^>]*)alt="([^"]*)"([^>]*)>/gi,function(match,before,oldAlt,after){return'<img'+before+'alt="'+imgAlt+'" title="'+imgAlt+'"'+after+'>';});fixedContent=fixedContent.replace(/<img((?:(?!alt=)[^>])*)>/gi,function(match,attrs){return'<img'+attrs+' alt="'+imgAlt+'" title="'+imgAlt+'">';});
                 html+='<div class="post-body">'+fixedContent+'</div></article>';
                 
-                // Related posts
-                var relatedPosts=entries.filter(function(e){var link=(e.link||[]).find(function(l){return l.rel==='alternate';})?.href||'';var slug=link.split('/').pop().replace('.html','');if(slug===POST_SLUG)return false;var eCats=(e.category||[]).map(function(c){return c.term;});return cats.some(function(c){return eCats.indexOf(c)!==-1;});}).slice(0,10);
-                
-                if(relatedPosts.length){
-                    html+='<div class="related-section"><h3>More Photos</h3><div class="related-grid">';
-                    relatedPosts.forEach(function(e){
-                        var t=e.title?.$t||'Untitled';var rlink=il((e.link||[]).find(function(l){return l.rel==='alternate';})?.href||'#');
-                        var thumb=hd(e.media$thumbnail?.url);var eCats=(e.category||[]).map(function(c){return c.term;}).filter(Boolean);var rAlt=altText(t,eCats);
-                        
-                        html+='<a href="'+rlink+'" class="related-card">';
-                        if(thumb)html+='<img class="related-card-img" src="'+thumb+'" alt="'+rAlt+'" loading="lazy" onerror="this.style.display=\'none\'">';
-                        html+='<span class="related-card-title">'+t+'</span>';
-                        // Label di related card sebagai link
-                        if(eCats.length){html+='<div class="related-card-labels">';eCats.slice(0,3).forEach(function(c){html+='<a href="'+labelLink(c)+'" class="related-card-label-link">'+c+'</a>';});html+='</div>';}
-                        html+='</a>';
-                    });
-                    html+='</div></div>';
-                }
-                
                 container.innerHTML=html;$('pagination').innerHTML='';setTimeout(function(){attachLightbox();},100);
+                
+                // RELATED POSTS - Fetch terpisah, filter by semua label (OR)
+                if(cats.length){
+                    var relatedUrl=base+'?alt=json-in-script&callback=rp&max-results=50';
+                    window.rp=function(rdata){var rfeed=rdata.feed;if(!rfeed||!rfeed.entry)return;var rentries=Array.isArray(rfeed.entry)?rfeed.entry:[rfeed.entry];
+                        var filtered=rentries.filter(function(e){var eCats=(e.category||[]).map(function(c){return c.term;});return cats.some(function(c){return eCats.indexOf(c)!==-1;});}).slice(0,10);
+                        if(!filtered.length)return;
+                        var rhtml='<div class="related-section"><h3>More Photos</h3><div class="related-grid">';
+                        filtered.forEach(function(e){var t=e.title?.$t||'Untitled';var rlink=il((e.link||[]).find(function(l){return l.rel==='alternate';})?.href||'#');var thumb=hd(e.media$thumbnail?.url);var eCats=(e.category||[]).map(function(c){return c.term;}).filter(Boolean);var rAlt=altText(t,eCats);
+                            rhtml+='<a href="'+rlink+'" class="related-card">';
+                            if(thumb)rhtml+='<img class="related-card-img" src="'+thumb+'" alt="'+rAlt+'" loading="lazy" onerror="this.style.display=\'none\'">';
+                            rhtml+='<span class="related-card-title">'+t+'</span>';
+                            if(eCats.length){rhtml+='<div class="related-card-labels">';eCats.forEach(function(c){rhtml+='<a href="'+labelLink(c)+'" class="related-card-label-link">'+c+'</a>';});rhtml+='</div>';}
+                            rhtml+='</a>';
+                        });
+                        rhtml+='</div></div>';container.innerHTML+=rhtml;
+                    };
+                    var rs=document.createElement('script');rs.src=relatedUrl;rs.async=true;document.head.appendChild(rs);
+                }
             };
             var s=document.createElement('script');s.src=feedUrl;s.async=true;s.onerror=function(){$('mainContent').innerHTML='<p class="error">Failed to load.</p>';};document.head.appendChild(s);return;
         }
@@ -310,7 +303,6 @@ permalink: /name/
                 
             var display=posts.slice(0,MAX);var allLabels=[];for(var i=0;i<display.length;i++){var cats=(display[i].category||[]).map(function(c){return c.term;}).filter(Boolean);for(var j=0;j<cats.length;j++){allLabels.push(cats[j]);}}buildBreadcrumb(allLabels);
             
-            // Related labels
             if(LABEL){var labelFreq={};for(var i=0;i<allLabels.length;i++){var l=allLabels[i];if(l!==LABEL){labelFreq[l]=(labelFreq[l]||0)+1;}}var sortedLabels=Object.keys(labelFreq).sort(function(a,b){return labelFreq[b]-labelFreq[a];}).slice(0,8);if(sortedLabels.length){$('relatedLabels').style.display='block';var rlHtml='Related: ';sortedLabels.forEach(function(l,i){rlHtml+='<a href="'+labelLink(l)+'">'+l+'</a>';if(i<sortedLabels.length-1)rlHtml+=', ';});$('relatedLabels').innerHTML=rlHtml;}}
             
             var html='<p class="count-bar">Showing '+display.length+' leaked photos</p><div class="post-grid">';for(var k=0;k<display.length;k++){html+=renderCard(display[k]);}html+='</div>';container.innerHTML=html;attachLightbox();
