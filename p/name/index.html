@@ -15,7 +15,6 @@ permalink: /name/
     <link rel="canonical" id="canonicalUrl" href="">
     <link rel="alternate" type="application/atom+xml" title="RSS Feed" id="rssFeed" href="">
     <link rel="icon" type="image/svg+xml" id="favicon" href="">
-    <link rel="sitemap" type="application/xml" title="Sitemap" id="sitemapLink" href="">
     <style>
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
         body{font-family:system-ui,-apple-system,sans-serif;max-width:100%;margin:0 auto;padding:70px 8px 20px;background:#0a0a0a;color:#e0e0e0;line-height:1.5}
@@ -41,6 +40,11 @@ permalink: /name/
         .filter-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#1a1a1a;border-radius:8px;margin-bottom:12px;font-size:12px;color:#888}
         .filter-bar a{margin-left:auto;color:#e94560;text-decoration:none;font-weight:600}
         .info-msg{padding:8px 12px;background:#2a1a1a;border:1px solid #e94560;border-radius:8px;margin-bottom:12px;font-size:12px;color:#e0a0a0}
+        .label-desc{font-size:12px;color:#888;margin-bottom:12px;line-height:1.5;background:#111;padding:10px 12px;border-radius:6px}
+        .label-desc strong{color:#e94560}
+        .related-labels{margin-bottom:16px;font-size:11px;color:#888}
+        .related-labels a{color:#e94560;text-decoration:none;margin:0 4px}
+        .related-labels a:hover{text-decoration:underline}
         h1{font-size:20px;margin-bottom:4px;color:#fff}
         .desc{font-size:12px;color:#888;margin-bottom:16px}
         .post-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
@@ -60,6 +64,10 @@ permalink: /name/
         .single-post-view .post-body{font-size:14px;line-height:1.7;color:#ccc}
         .single-post-view .post-body img{max-width:100%;height:auto;border-radius:6px;margin:8px 0;display:block;cursor:pointer}
         .single-post-view .post-body a{color:#e94560;text-decoration:underline}
+        .single-post-labels{margin:12px 0;display:flex;flex-wrap:wrap;gap:6px}
+        .single-post-label{display:inline-block;background:#1a1a1a;padding:3px 10px;border-radius:12px;font-size:11px;color:#999;text-decoration:none}
+        .single-post-label:hover{background:#333;color:#fff}
+        .single-post-desc{font-size:12px;color:#888;margin-bottom:12px;line-height:1.5;background:#111;padding:10px 12px;border-radius:6px}
         .related-section{margin-top:20px}
         .related-section h3{font-size:15px;margin-bottom:10px;color:#fff}
         .related-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
@@ -67,7 +75,8 @@ permalink: /name/
         .related-card{background:#1a1a1a;border-radius:6px;overflow:hidden;text-decoration:none;display:block;transition:transform 0.2s}
         .related-card:hover{transform:translateY(-2px)}
         .related-card-img{width:100%;height:auto;aspect-ratio:2/3;object-fit:cover;display:block}
-        .related-card-title{font-size:10px;font-weight:600;color:#ccc;padding:6px 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+        .related-card-title{font-size:10px;font-weight:600;color:#ccc;padding:6px 8px 2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+        .related-card-labels{font-size:8px;color:#888;padding:0 8px 6px}
         .no-img{aspect-ratio:2/3;background:#1a1a1a;display:none;align-items:center;justify-content:center;color:#555;font-size:12px}
         .loading,.error,.empty{text-align:center;padding:40px 20px;color:#888;font-size:14px}
         .error{color:#e94560}
@@ -130,6 +139,11 @@ permalink: /name/
     <h1 id="pageHeading">Loading...</h1>
     <p class="desc" id="siteDesc"></p>
     <div class="filter-bar" id="filterBar" style="display:none"></div>
+    
+    <!-- KETERANGAN: Deskripsi halaman label + related labels -->
+    <div class="label-desc" id="labelDesc" style="display:none"></div>
+    <div class="related-labels" id="relatedLabels" style="display:none"></div>
+    
     <div id="mainContent"><p class="loading">Loading...</p></div>
     <div class="pagination" id="pagination"></div>
 
@@ -185,8 +199,6 @@ permalink: /name/
         var DEFAULT_LABEL = '';
         var BASE_PATH = '/name/';
         var CACHE_EXPIRE = 30 * 60 * 1000;
-        var SITEMAP_CACHE_EXPIRE = 24 * 60 * 60 * 1000;
-        $('sitemapLink').href=location.origin+BASE_PATH+'?sitemap=true';
         
         function hashDomain(h){var hash=0;for(var i=0;i<h.length;i++){hash=((hash<<5)-hash)+h.charCodeAt(i);hash=hash&hash;}return Math.abs(hash);}
         var seed=hashDomain(host);
@@ -196,7 +208,6 @@ permalink: /name/
         var START=parseInt(p.get('start-index'))||DEFAULT_START_INDEX;
         var MAX=parseInt(p.get('max-results'))||MAX_POSTS_PER_PAGE;
         var LABEL=p.get('label')||DEFAULT_LABEL;
-        var SITEMAP_MODE=p.get('sitemap')==='true';
         $('canonicalUrl').href=location.href;
         $('rssFeed').href='https://www.blogger.com/feeds/'+BLOG_ID+'/posts/default?alt=rss';
         
@@ -210,7 +221,6 @@ permalink: /name/
         
         // CACHE
         function getCacheKey(){return 'cache_'+location.pathname+'_'+(LABEL||'home')+'_'+START;}
-        function getSitemapCacheKey(){return 'sitemap_cache';}
         function getCache(key){try{var data=localStorage.getItem(key);if(!data)return null;var parsed=JSON.parse(data);if(Date.now()-parsed.time>CACHE_EXPIRE){localStorage.removeItem(key);return null;}return parsed.value;}catch(e){return null;}}
         function setCache(key,value){try{localStorage.setItem(key,JSON.stringify({value:value,time:Date.now()}));}catch(e){}}
         
@@ -232,42 +242,108 @@ permalink: /name/
         // BREADCRUMB
         function buildBreadcrumb(allLabels){var html='<ul class="spo">';var uniqueLabels=[];for(var i=0;i<allLabels.length;i++){if(uniqueLabels.indexOf(allLabels[i])===-1)uniqueLabels.push(allLabels[i]);}for(var j=0;j<uniqueLabels.length;j++){var lbl=uniqueLabels[j];var link=labelLink(lbl);html+='<li><a href="'+link+'">'+lbl+'</a></li>';}html+='</ul>';$('breadcrumb').innerHTML=html;var schemaItems=[{'@type':'ListItem','position':1,'name':'Home','item':location.origin+BASE_PATH}];for(var k=0;k<uniqueLabels.length;k++){schemaItems.push({'@type':'ListItem','position':k+2,'name':uniqueLabels[k],'item':location.origin+labelLink(uniqueLabels[k])});}$('breadcrumbSchema').textContent=JSON.stringify({'@context':'https://schema.org','@type':'BreadcrumbList','itemListElement':schemaItems},null,2);}
         
-        // SITEMAP MODE
-        if(SITEMAP_MODE){
-            var sitemapCache=getCache(getSitemapCacheKey());
-            if(sitemapCache){document.head.innerHTML='';document.body.innerHTML='<pre>'+sitemapCache+'</pre>';return;}
-            var sitemapUrl=base+'?alt=json-in-script&callback=sm&max-results='+MAX+'&start-index='+START;
-            window.sm=function(data){var feed=data.feed;var xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';if(feed&&feed.entry){var entries=Array.isArray(feed.entry)?feed.entry:[feed.entry];var labels=[];for(var i=0;i<entries.length;i++){var cats=(entries[i].category||[]).map(function(c){return c.term;}).filter(Boolean);for(var j=0;j<cats.length;j++){if(labels.indexOf(cats[j])===-1)labels.push(cats[j]);}}for(var k=0;k<labels.length;k++){xml+='  <url><loc>'+location.origin+BASE_PATH+'?label='+labels[k]+'</loc></url>\n';}}xml+='</urlset>';setCache(getSitemapCacheKey(),xml);document.head.innerHTML='';document.body.innerHTML='<pre>'+xml+'</pre>';};
-            var smScript=document.createElement('script');smScript.src=sitemapUrl;smScript.async=true;document.head.appendChild(smScript);return;
-        }
-        
-        // SINGLE POST MODE
+        // ============================================
+        // SINGLE POST MODE (/?p=slug)
+        // ============================================
+        // KETERANGAN: Fetch 150 postingan, cari slug exact match, 
+        // tampilkan full konten + label + related posts
         if(POST_SLUG){
             $('searchForm').style.display='none';$('searchHint').style.display='none';$('backLink').style.display='inline-flex';
             if(document.referrer&&document.referrer.includes(host))$('backLink').href=document.referrer;$('pagination').style.display='none';
             var pageId=POST_SLUG.replace(/-/g,' ');$('pageHeading').textContent=pageId;$('siteDesc').textContent='Loading post...';
-            var feedUrl=base+'?alt=json-in-script&callback=sp&max-results=50';
+            var feedUrl=base+'?alt=json-in-script&callback=sp&max-results=150'; // KETERANGAN: Fetch 150 postingan
+            
             window.sp=function(data){var feed=data.feed;var container=$('mainContent');
-                if(!feed||!feed.entry){container.innerHTML='<p class="error">Post not found. <a href="'+BASE_PATH+'" style="color:#e94560">Back to home</a></p>';return;}
-                var entries=Array.isArray(feed.entry)?feed.entry:[feed.entry];var post=entries.find(function(e){var link=(e.link||[]).find(function(l){return l.rel==='alternate';})?.href||'';var slug=link.split('/').pop().replace('.html','');return slug===POST_SLUG;});
+                if(!feed||!feed.entry){container.innerHTML='<p class="error">Post not found.</p>';return;}
+                var entries=Array.isArray(feed.entry)?feed.entry:[feed.entry];
+                
+                // KETERANGAN: Cari postingan dengan slug exact match
+                var post=entries.find(function(e){var link=(e.link||[]).find(function(l){return l.rel==='alternate';})?.href||'';var slug=link.split('/').pop().replace('.html','');return slug===POST_SLUG;});
                 if(!post){container.innerHTML='<p class="error">Post not found. <a href="'+BASE_PATH+'" style="color:#e94560">Back to home</a></p>';return;}
+                
                 var title=post.title?.$t||'Untitled';var date=fd(post.published?.$t);var content=post.content?.$t||post.summary?.$t||'';var cats=(post.category||[]).map(function(c){return c.term;}).filter(Boolean);var author=post.author?.[0]?.name?.$t||'';var imgAlt=altText(title,cats);
+                
+                // KETERANGAN: SEO title + deskripsi
                 var leakedTerms=['leaked','leak','viral','latest','exclusive','hot','new'];var hasLeaked=leakedTerms.some(function(t){return title.toLowerCase().includes(t);});var seoTitle=title;if(!hasLeaked)seoTitle=title+' Leaked Photos';
                 document.title=seoTitle+' — '+dn;$('pageHeading').textContent=title;$('siteDesc').textContent='View latest leaked photos of '+title+' on '+dn+'.';
                 var md=document.createElement('meta');md.name='description';md.content='View latest leaked photos, viral content, and exclusive updates of '+title+' on '+dn+'.';document.head.appendChild(md);
-                var html='<article class="single-post-view"><h1 class="post-title">'+title+'</h1><div class="post-meta">';if(author)html+='<span>'+author+'</span>';if(date)html+='<time datetime="'+(post.published?.$t||'')+'">'+date+'</time>';html+='</div>';
+                
+                // KETERANGAN: Breadcrumb untuk single post (label sebagai link)
+                var breadHtml='<a href="'+BASE_PATH+'">Home</a>';
+                if(cats.length){breadHtml+=' <span style="color:#666">&rsaquo;</span> ';cats.slice(0,3).forEach(function(c,i){breadHtml+='<a href="'+labelLink(c)+'">'+c+'</a>';if(i<cats.slice(0,3).length-1)breadHtml+=', ';});}
+                breadHtml+=' <span style="color:#666">&rsaquo;</span> <span>'+title+'</span>';
+                $('breadcrumb').innerHTML=breadHtml;
+                
+                // KETERANGAN: Konten utama
+                var html='<article class="single-post-view"><h1 class="post-title">'+title+'</h1>';
+                
+                // KETERANGAN: Label visible sebagai teks + link
+                if(cats.length){
+                    html+='<div class="single-post-labels">';
+                    cats.forEach(function(c){html+='<a href="'+labelLink(c)+'" class="single-post-label">'+c+'</a>';});
+                    html+='</div>';
+                }
+                
+                // KETERANGAN: Deskripsi singkat untuk SEO (1-2 kalimat)
+                var snippet=content.replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim().substring(0,200);
+                html+='<p class="single-post-desc">View latest leaked photos and viral updates of <strong>'+title+'</strong> on '+dn+'. '+(snippet?(' — '+snippet+'...'):'')+'</p>';
+                
+                html+='<div class="post-meta">';if(author)html+='<span>'+author+'</span>';if(date)html+='<time datetime="'+(post.published?.$t||'')+'">'+date+'</time>';html+='</div>';
+                
+                // KETERANGAN: Inject alt ke semua gambar di konten
                 var fixedContent=content;fixedContent=fixedContent.replace(/<img([^>]*)alt="([^"]*)"([^>]*)>/gi,function(match,before,oldAlt,after){return'<img'+before+'alt="'+imgAlt+'" title="'+imgAlt+'"'+after+'>';});fixedContent=fixedContent.replace(/<img((?:(?!alt=)[^>])*)>/gi,function(match,attrs){return'<img'+attrs+' alt="'+imgAlt+'" title="'+imgAlt+'">';});
                 html+='<div class="post-body">'+fixedContent+'</div></article>';
+                
+                // KETERANGAN: Related posts (10 postingan dengan label yang sama)
                 var relatedPosts=entries.filter(function(e){var link=(e.link||[]).find(function(l){return l.rel==='alternate';})?.href||'';var slug=link.split('/').pop().replace('.html','');if(slug===POST_SLUG)return false;var eCats=(e.category||[]).map(function(c){return c.term;});return cats.some(function(c){return eCats.indexOf(c)!==-1;});}).slice(0,10);
-                if(relatedPosts.length){html+='<div class="related-section"><h3>More Photos</h3><div class="related-grid">';relatedPosts.forEach(function(e){var t=e.title?.$t||'Untitled';var rlink=bloggerLink((e.link||[]).find(function(l){return l.rel==='alternate';})?.href||'#');var thumb=hd(e.media$thumbnail?.url);var eCats=(e.category||[]).map(function(c){return c.term;}).filter(Boolean);var rAlt=altText(t,eCats);html+='<a href="'+rlink+'" target="_blank" rel="noopener" class="related-card">';if(thumb)html+='<img class="related-card-img" src="'+thumb+'" alt="'+rAlt+'" loading="lazy" onerror="this.style.display=\'none\'">';html+='<span class="related-card-title">'+t+'</span></a>';});html+='</div></div>';}
-                container.innerHTML=html;$('pagination').innerHTML='';setTimeout(function(){attachLightbox();},100);};
+                
+                if(relatedPosts.length){
+                    html+='<div class="related-section"><h3>More Photos</h3><div class="related-grid">';
+                    relatedPosts.forEach(function(e){
+                        var t=e.title?.$t||'Untitled';
+                        // KETERANGAN: Related posts link ke /?p=slug (bukan Blogger asli)
+                        var rlink=il((e.link||[]).find(function(l){return l.rel==='alternate';})?.href||'#');
+                        var thumb=hd(e.media$thumbnail?.url);
+                        var eCats=(e.category||[]).map(function(c){return c.term;}).filter(Boolean);
+                        var rAlt=altText(t,eCats);
+                        
+                        html+='<a href="'+rlink+'" class="related-card">';
+                        if(thumb)html+='<img class="related-card-img" src="'+thumb+'" alt="'+rAlt+'" loading="lazy" onerror="this.style.display=\'none\'">';
+                        html+='<span class="related-card-title">'+t+'</span>';
+                        // KETERANGAN: Label visible di related card untuk SEO
+                        if(eCats.length)html+='<span class="related-card-labels">'+eCats.slice(0,3).join(', ')+'</span>';
+                        html+='</a>';
+                    });
+                    html+='</div></div>';
+                }
+                
+                container.innerHTML=html;$('pagination').innerHTML='';setTimeout(function(){attachLightbox();},100);
+            };
             var s=document.createElement('script');s.src=feedUrl;s.async=true;s.onerror=function(){$('mainContent').innerHTML='<p class="error">Failed to load.</p>';};document.head.appendChild(s);return;
         }
         
-        // GRID MODE
+        // ============================================
+        // GRID MODE (/?label=xxx atau homepage)
+        // ============================================
         var si=$('searchInput');if(si&&LABEL)si.value=LABEL;
         if(LABEL)$('searchHint').textContent='Showing results for: '+LABEL;else $('searchHint').textContent='Try: name leaked, viral, latest, exclusive';
-        if(LABEL){var il2=/leak|viral|latest|exclusive|hot|new/i.test(LABEL);var pt,pd;if(il2){pt=LABEL+' — '+dn;pd='View '+LABEL+' leaked photos, viral content, and exclusive updates on '+dn+'.';}else{pt=LABEL+' Leaked Photos & Viral Updates — '+dn;pd='View latest '+LABEL+' leaked photos, viral content, and exclusive updates on '+dn+'. Browse the full collection.';}document.title=pt;$('pageHeading').textContent=LABEL;$('siteDesc').textContent=pd;var md2=document.createElement('meta');md2.name='description';md2.content=pd;document.head.appendChild(md2);$('filterBar').style.display='flex';$('filterBar').innerHTML='Category: <strong>'+LABEL+'</strong> <a href="'+BASE_PATH+'">Clear</a>';}else{document.title=dn+' — Leaked Photos & Viral Collection';$('pageHeading').textContent=dn;$('siteDesc').textContent='Latest leaked photos, viral content, and exclusive updates. Browse the full collection.';var md3=document.createElement('meta');md3.name='description';md3.content='Latest leaked photos, viral content, and exclusive updates on '+dn+'. New photos added regularly.';document.head.appendChild(md3);}
+        
+        // KETERANGAN: SEO untuk halaman label
+        if(LABEL){
+            var il2=/leak|viral|latest|exclusive|hot|new/i.test(LABEL);var pt,pd;
+            if(il2){pt=LABEL+' — '+dn;pd='View '+LABEL+' leaked photos, viral content, and exclusive updates on '+dn+'.';}
+            else{pt=LABEL+' Leaked Photos & Viral Updates — '+dn;pd='View latest '+LABEL+' leaked photos, viral content, and exclusive updates on '+dn+'. Browse the full collection.';}
+            document.title=pt;$('pageHeading').textContent=LABEL;$('siteDesc').textContent=pd;
+            var md2=document.createElement('meta');md2.name='description';md2.content=pd;document.head.appendChild(md2);
+            $('filterBar').style.display='flex';$('filterBar').innerHTML='Category: <strong>'+LABEL+'</strong> <a href="'+BASE_PATH+'">Clear</a>';
+            
+            // KETERANGAN: Deskripsi halaman label untuk SEO
+            $('labelDesc').style.display='block';
+            $('labelDesc').innerHTML='Browse <strong>'+LABEL+'</strong> leaked photos, viral content, and exclusive updates on '+dn+'. Find the latest '+LABEL+' images in this collection.';
+        }else{
+            document.title=dn+' — Leaked Photos & Viral Collection';$('pageHeading').textContent=dn;$('siteDesc').textContent='Latest leaked photos, viral content, and exclusive updates. Browse the full collection.';
+            var md3=document.createElement('meta');md3.name='description';md3.content='Latest leaked photos, viral content, and exclusive updates on '+dn+'. New photos added regularly.';document.head.appendChild(md3);
+        }
         
         var cacheKey=getCacheKey();var cachedData=getCache(cacheKey);
         if(cachedData){renderGrid(cachedData);return;}
@@ -279,19 +355,39 @@ permalink: /name/
         fetchPosts(function(posts){setCache(cacheKey,posts);renderGrid(posts);});
         
         function renderGrid(posts){var container=$('mainContent');
+            // KETERANGAN: Fallback kalau label tidak ketemu
             if(!posts.length){
                 if(LABEL){var fb=new URLSearchParams();fb.set('alt','json-in-script');fb.set('callback','hpfb');fb.set('max-results','10');fb.set('start-index','1');
                     window.hpfb=function(data){var feed=data.feed;var fbPosts=[];if(feed&&feed.entry){fbPosts=Array.isArray(feed.entry)?feed.entry:[feed.entry];}if(!fbPosts.length){container.innerHTML='<p class="empty">No posts found.</p>';return;}
                         var infoBar=document.createElement('div');infoBar.className='info-msg';infoBar.innerHTML='No results for "<strong>'+LABEL+'</strong>". Showing latest posts instead.';container.parentNode.insertBefore(infoBar,container);
                         $('filterBar').style.display='none';$('pageHeading').textContent=dn;document.title=dn+' — Leaked Photos & Viral Collection';
+                        $('labelDesc').style.display='none';$('relatedLabels').style.display='none';
                         var allLabels=[];for(var i=0;i<fbPosts.length;i++){var cats=(fbPosts[i].category||[]).map(function(c){return c.term;}).filter(Boolean);for(var j=0;j<cats.length;j++){allLabels.push(cats[j]);}}buildBreadcrumb(allLabels);
                         var html='<p class="count-bar">Showing '+fbPosts.length+' latest leaked photos</p><div class="post-grid">';for(var k=0;k<fbPosts.length;k++){html+=renderCard(fbPosts[k]);}html+='</div>';container.innerHTML=html;attachLightbox();};
                     var fbScript=document.createElement('script');fbScript.src=base+'?'+fb.toString();fbScript.async=true;document.head.appendChild(fbScript);return;}
                 container.innerHTML='<p class="empty">No posts found.</p>';return;}
+                
             var display=posts.slice(0,MAX);var allLabels=[];for(var i=0;i<display.length;i++){var cats=(display[i].category||[]).map(function(c){return c.term;}).filter(Boolean);for(var j=0;j<cats.length;j++){allLabels.push(cats[j]);}}buildBreadcrumb(allLabels);
+            
+            // KETERANGAN: Related labels (label lain yang sering muncul barengan)
+            if(LABEL){
+                var labelFreq={};
+                for(var i=0;i<allLabels.length;i++){var l=allLabels[i];if(l!==LABEL){labelFreq[l]=(labelFreq[l]||0)+1;}}
+                var sortedLabels=Object.keys(labelFreq).sort(function(a,b){return labelFreq[b]-labelFreq[a];}).slice(0,8);
+                if(sortedLabels.length){
+                    $('relatedLabels').style.display='block';
+                    var rlHtml='Related: ';
+                    sortedLabels.forEach(function(l,i){
+                        rlHtml+='<a href="'+labelLink(l)+'">'+l+'</a>';
+                        if(i<sortedLabels.length-1)rlHtml+=', ';
+                    });
+                    $('relatedLabels').innerHTML=rlHtml;
+                }
+            }
+            
             var html='<p class="count-bar">Showing '+display.length+' leaked photos</p><div class="post-grid">';for(var k=0;k<display.length;k++){html+=renderCard(display[k]);}html+='</div>';container.innerHTML=html;attachLightbox();
-            var sitemapXml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';var uniqueLabels=[];for(var m=0;m<display.length;m++){var cats2=(display[m].category||[]).map(function(c){return c.term;}).filter(Boolean);for(var n=0;n<cats2.length;n++){if(uniqueLabels.indexOf(cats2[n])===-1)uniqueLabels.push(cats2[n]);}}for(var o=0;o<uniqueLabels.length;o++){sitemapXml+='  <url><loc>'+location.origin+BASE_PATH+'?label='+uniqueLabels[o]+'</loc></url>\n';}sitemapXml+='</urlset>';setCache(getSitemapCacheKey(),sitemapXml);
-            var structuredPosts=[];for(var p=0;p<display.length;p++){var e=display[p];var t=e.title?.$t||'Untitled';var link=il((e.link||[]).find(function(l){return l.rel==='alternate';})?.href||'#');var thumb=hd(e.media$thumbnail?.url)||'';var cats3=(e.category||[]).map(function(c){return c.term;}).filter(Boolean);structuredPosts.push({'@type':'ImageObject','name':t,'url':link,'thumbnailUrl':thumb,'caption':altText(t,cats3),'keywords':cats3.join(', ')});}
+            
+            var structuredPosts=[];for(var m=0;m<display.length;m++){var e=display[m];var t=e.title?.$t||'Untitled';var link=il((e.link||[]).find(function(l){return l.rel==='alternate';})?.href||'#');var thumb=hd(e.media$thumbnail?.url)||'';var cats2=(e.category||[]).map(function(c){return c.term;}).filter(Boolean);structuredPosts.push({'@type':'ImageObject','name':t,'url':link,'thumbnailUrl':thumb,'caption':altText(t,cats2),'keywords':cats2.join(', ')});}
             $('structuredData').textContent=JSON.stringify({'@context':'https://schema.org','@type':'CollectionPage','name':document.title,'description':$('siteDesc').textContent,'url':location.href,'mainEntity':{'@type':'ImageGallery','image':structuredPosts}},null,2);}
     })();
     </script>
